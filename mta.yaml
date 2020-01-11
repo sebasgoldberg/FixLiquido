@@ -1,9 +1,9 @@
 ID: FixLiquido
-_schema-version: "2.1"
+_schema-version: '2.1'
 description: Correção do preço liquido considerando que o valor atual é o bruto.
 version: 0.0.1
 modules:
-  - name: FixLiquido-db
+  - name: db
     type: hdb
     path: db
     parameters:
@@ -11,7 +11,7 @@ modules:
       disk-quota: 256M
     requires:
       - name: FixLiquido-db-hdi-container
-  - name: FixLiquido-srv
+  - name: srv
     type: nodejs
     path: srv
     parameters:
@@ -20,11 +20,33 @@ modules:
     provides:
       - name: srv_api
         properties:
-          url: ${default-url}
+          url: '${default-url}'
     requires:
       - name: FixLiquido-db-hdi-container
+  - name: web
+    type: html5
+    path: web
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    build-parameters:
+      builder: grunt
+    requires:
+      - name: uaa_FixLiquido
+      - name: dest_FixLiquido
 resources:
   - name: FixLiquido-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
-      hdi-container-name: ${service-name}
+      hdi-container-name: '${service-name}'
+  - name: uaa_FixLiquido
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
+    type: org.cloudfoundry.managed-service
+  - name: dest_FixLiquido
+    parameters:
+      service-plan: lite
+      service: destination
+    type: org.cloudfoundry.managed-service
