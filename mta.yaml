@@ -36,6 +36,15 @@ modules:
     requires:
       - name: uaa_FixLiquido
       - name: dest_FixLiquido
+
+  - name: daemon
+    type: nodejs
+    path: daemon
+    provides:
+     - name: daemon_api
+       properties:
+          url: ${default-url}
+
 resources:
   - name: FixLiquido-db-hdi-container
     type: com.sap.xs.hdi-container
