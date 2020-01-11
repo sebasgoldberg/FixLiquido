@@ -11,6 +11,8 @@ modules:
       disk-quota: 256M
     requires:
       - name: FixLiquido-db-hdi-container
+        properties:
+          TARGET_CONTAINER: '~{hdi-container-name}'
   - name: srv
     type: nodejs
     path: srv
