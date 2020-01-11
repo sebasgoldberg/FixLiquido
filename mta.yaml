@@ -1,0 +1,30 @@
+ID: FixLiquido
+_schema-version: "2.1"
+description: Correção do preço liquido considerando que o valor atual é o bruto.
+version: 0.0.1
+modules:
+  - name: FixLiquido-db
+    type: hdb
+    path: db
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: FixLiquido-db-hdi-container
+  - name: FixLiquido-srv
+    type: nodejs
+    path: srv
+    parameters:
+      memory: 512M
+      disk-quota: 256M
+    provides:
+      - name: srv_api
+        properties:
+          url: ${default-url}
+    requires:
+      - name: FixLiquido-db-hdi-container
+resources:
+  - name: FixLiquido-db-hdi-container
+    type: com.sap.xs.hdi-container
+    properties:
+      hdi-container-name: ${service-name}
