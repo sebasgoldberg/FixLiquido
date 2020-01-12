@@ -1,5 +1,8 @@
 {
-  "dependencies": {},
+  "dependencies": {
+  	"@sap/xsenv": "^1.2.9",
+  	"request": "^2.88.0"
+  },
   "description": "Daemon para correção de POs",
   "devDependencies": {
     "jest": "^23.6.0",
@@ -14,7 +17,7 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": "8.x"
+    "node": "12.x"
   },
   "version": "1.0.0"
 }

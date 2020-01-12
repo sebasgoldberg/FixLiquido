@@ -1,0 +1,11 @@
+{
+  "welcomeFile": "AppRouterHome.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+    	"source": "^/daemon/(.*)$",
+		"destination": "daemon_api",
+		"authenticationType": "xsuaa"
+	}
+  ]
+}

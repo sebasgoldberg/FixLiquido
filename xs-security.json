@@ -1,3 +1,4 @@
 {
-	"xsappname": "FixLiquido-00"
+	"xsappname": "FixLiquido-00",
+    "tenant-mode": "dedicated"
 }

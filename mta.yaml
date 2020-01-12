@@ -35,15 +35,38 @@ modules:
       builder: grunt
     requires:
       - name: uaa_FixLiquido
-      - name: dest_FixLiquido
-
+      - name: daemon_api
+        group: destinations
+        properties:
+          name: daemon_api
+          url: '~{url}'
+          forwardAuthToken: true
   - name: daemon
     type: nodejs
     path: daemon
     provides:
-     - name: daemon_api
+      - name: daemon_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: dest_FixLiquido
+      - name: uaa_FixLiquido
+  - name: router
+    type: nodejs
+    path: router
+    provides:
+     - name: router_api
        properties:
           url: ${default-url}
+    requires:
+      - name: dest_FixLiquido
+      - name: uaa_FixLiquido
+      - name: daemon_api
+        group: destinations
+        properties:
+          name: daemon_api
+          url: '~{url}'
+          forwardAuthToken: true
 
 resources:
   - name: FixLiquido-db-hdi-container
@@ -55,9 +78,15 @@ resources:
       path: ./xs-security.json
       service-plan: application
       service: xsuaa
+      config:
+        xsappname: spacetravel-uaa-${space}
+        tenant-mode: dedicated
     type: org.cloudfoundry.managed-service
   - name: dest_FixLiquido
     parameters:
       service-plan: lite
       service: destination
+      service-name: dest_FixLiquido
     type: org.cloudfoundry.managed-service
+  - name: destinations
+    type: org.cloudfoundry.existing-service

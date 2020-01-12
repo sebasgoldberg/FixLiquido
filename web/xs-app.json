@@ -6,6 +6,11 @@
   },
   "routes": [
     {
+      "source": "^/daemon/(.*)$",
+		"destination": "daemon_api",
+		"authenticationType": "xsuaa"
+	},
+    {
       "source": "^/web/(.*)$",
       "target": "$1",
       "localDir": "webapp"
