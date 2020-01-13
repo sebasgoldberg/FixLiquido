@@ -6,6 +6,12 @@
     	"source": "^/daemon/(.*)$",
 		"destination": "daemon_api",
 		"authenticationType": "xsuaa"
+	},
+	{
+		"source": "^/s4hc/(.*)$",
+		"target": "$1",
+		"destination": "s4hc",
+		"authenticationType": "xsuaa"
 	}
   ]
 }
