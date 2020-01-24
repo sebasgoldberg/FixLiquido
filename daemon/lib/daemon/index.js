@@ -3,20 +3,27 @@ module.exports = class {
 	constructor(){
 		this.active = false;
 		this.sleepSeconds = 10;
+		this.running = false;
 	}
 
-	_runOneExecution(){
+	async _runOneExecution(){
 		console.log(`${new Date().toLocaleString()}: You shoud redefine _runOneExecution method.`)
 	}
 
-	_runOneExecutionAndScheduleNext(){
+	async _runOneExecutionAndScheduleNext(){
 		if (!this.active)
 			return;
-		this._runOneExecution();
+		this.running = true;
+		await this._runOneExecution();
+		this.running = false;
+		if (!this.active)
+			return;
 		this._scheduleNext();
 	}
 
 	_scheduleNext(){
+		if (this.running)
+			return;
 		setTimeout(this._runOneExecutionAndScheduleNext.bind(this), this.sleepSeconds*1000);
 	}
 

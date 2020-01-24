@@ -48,7 +48,7 @@ var POFixDaemonInstance = new POFixDaemon();
 
 // var scheduleFixPOs = () => setTimeout(fixPOs, 10*1000) ;	
 
-app.get('/startFixPOs', function(oReq, oRes) {
+app.get('/start', function(oReq, oRes) {
 	
 	// if (active){
 	// 	oRes.send('Já Ativo');
@@ -65,7 +65,7 @@ app.get('/startFixPOs', function(oReq, oRes) {
 
 });
 
-app.get('/stopFixPOs', function(oReq, oRes) {
+app.get('/stop', function(oReq, oRes) {
 	
 	// active = false;
 

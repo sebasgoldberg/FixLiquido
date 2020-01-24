@@ -1,9 +1,17 @@
 var Daemon = require('../daemon')
 
-class POFixDaemon extends Daemon{
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
-	_runOneExecution(){
-		console.log(`${new Date().toLocaleString()}: POFixDaemon::_runOneExecution.`)
+class POFixDaemon extends Daemon{
+	
+	async _runOneExecution(){
+		console.log(`${new Date().toLocaleString()}: POFixDaemon::_runOneExecution::start.`)
+		await sleep((2+this.sleepSeconds)*1000);
+		console.log(`${new Date().toLocaleString()}: POFixDaemon::_runOneExecution::end.`)
 	}
 
 }
