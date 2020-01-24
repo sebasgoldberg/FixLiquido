@@ -32,28 +32,34 @@ app.use(
 	})
 );
 
-var active = false;
+var POFixDaemon = new require('./lib/pofix/daemon');
+var POFixDaemonInstance = new POFixDaemon();
 
-var fixPOs = () => {
-		if (!active)
-			return;
-		var message = `${new Date().toUTCString()}: /fixPOs`;
-		console.log(message);
-		scheduleFixPOs();
-	};
 
-var scheduleFixPOs = () => setTimeout(fixPOs, 10*1000) ;	
+// var active = false;
+
+// var fixPOs = () => {
+// 		if (!active)
+// 			return;
+// 		var message = `${new Date().toUTCString()}: /fixPOs`;
+// 		console.log(message);
+// 		scheduleFixPOs();
+// 	};
+
+// var scheduleFixPOs = () => setTimeout(fixPOs, 10*1000) ;	
 
 app.get('/startFixPOs', function(oReq, oRes) {
 	
-	if (active){
-		oRes.send('Já Ativo');
-		return;
-	}
+	// if (active){
+	// 	oRes.send('Já Ativo');
+	// 	return;
+	// }
 	
-	active = true;
+	// active = true;
 	
-	scheduleFixPOs();
+	// scheduleFixPOs();
+
+	POFixDaemonInstance.start();
 
 	oRes.send('Ativado');
 
@@ -61,7 +67,9 @@ app.get('/startFixPOs', function(oReq, oRes) {
 
 app.get('/stopFixPOs', function(oReq, oRes) {
 	
-	active = false;
+	// active = false;
+
+	POFixDaemonInstance.stop();
 
 	oRes.send('Desativado');
 
