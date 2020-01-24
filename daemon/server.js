@@ -32,7 +32,42 @@ app.use(
 	})
 );
 
-app.get('/', function(oReq, oRes) {
+var active = false;
+
+var fixPOs = () => {
+		if (!active)
+			return;
+		var message = `${new Date().toUTCString()}: /fixPOs`;
+		console.log(message);
+		scheduleFixPOs();
+	};
+
+var scheduleFixPOs = () => setTimeout(fixPOs, 10*1000) ;	
+
+app.get('/startFixPOs', function(oReq, oRes) {
+	
+	if (active){
+		oRes.send('Já Ativo');
+		return;
+	}
+	
+	active = true;
+	
+	scheduleFixPOs();
+
+	oRes.send('Ativado');
+
+});
+
+app.get('/stopFixPOs', function(oReq, oRes) {
+	
+	active = false;
+
+	oRes.send('Desativado');
+
+});
+
+app.get('/dest', function(oReq, oRes) {
     //oRes.send("Hello");
 
 	Promise.all([
@@ -51,6 +86,32 @@ app.get('/', function(oReq, oRes) {
 
 });
 
+app.get('/env', function(oReq, oRes) {
+
+	oRes.send(JSON.stringify({
+		VCAP_APPLICATION: JSON.parse(process.env.VCAP_APPLICATION),
+		VCAP_SERVICES: JSON.parse(process.env.VCAP_SERVICES),
+	}));
+
+});
+
+app.get('/req', function(oReq, oRes) {
+
+	var cache = [];
+	oRes.send(JSON.stringify(oReq, function(key, value) {
+	    if (typeof value === 'object' && value !== null) {
+	        if (cache.indexOf(value) !== -1) {
+	            // Duplicate reference found, discard key
+	            return;
+	        }
+	        // Store value in our collection
+	        cache.push(value);
+	    }
+	    return value;
+	}));
+	var cache = null;
+
+});
 
 const iPort = appEnv.isLocal ? 3000: appEnv.port;
 app.listen(iPort, function () {
