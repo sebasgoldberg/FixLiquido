@@ -4,6 +4,7 @@
   "routes": [
     {
     	"source": "^/daemon/(.*)$",
+        "target": "$1",
 		"destination": "daemon_api",
 		"authenticationType": "xsuaa"
 	},

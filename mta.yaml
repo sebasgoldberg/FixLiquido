@@ -3,44 +3,6 @@ _schema-version: '2.1'
 description: Correção do preço liquido considerando que o valor atual é o bruto.
 version: 0.0.1
 modules:
-  - name: db
-    type: hdb
-    path: db
-    parameters:
-      memory: 256M
-      disk-quota: 256M
-    requires:
-      - name: FixLiquido-db-hdi-container
-        properties:
-          TARGET_CONTAINER: '~{hdi-container-name}'
-  - name: srv
-    type: nodejs
-    path: srv
-    parameters:
-      memory: 512M
-      disk-quota: 256M
-    provides:
-      - name: srv_api
-        properties:
-          url: '${default-url}'
-    requires:
-      - name: FixLiquido-db-hdi-container
-  - name: web
-    type: html5
-    path: web
-    parameters:
-      disk-quota: 256M
-      memory: 256M
-    build-parameters:
-      builder: grunt
-    requires:
-      - name: uaa_FixLiquido
-      - name: daemon_api
-        group: destinations
-        properties:
-          name: daemon_api
-          url: '~{url}'
-          forwardAuthToken: true
   - name: daemon
     type: nodejs
     path: daemon
@@ -54,10 +16,6 @@ modules:
   - name: router
     type: nodejs
     path: router
-    provides:
-     - name: router_api
-       properties:
-          url: ${default-url}
     requires:
       - name: dest_FixLiquido
       - name: uaa_FixLiquido
@@ -69,10 +27,6 @@ modules:
           forwardAuthToken: true
 
 resources:
-  - name: FixLiquido-db-hdi-container
-    type: com.sap.xs.hdi-container
-    properties:
-      hdi-container-name: '${service-name}'
   - name: uaa_FixLiquido
     parameters:
       path: ./xs-security.json
@@ -95,6 +49,4 @@ resources:
       service-plan: lite
       service: destination
       service-name: dest_FixLiquido
-    type: org.cloudfoundry.managed-service
-  - name: destinations
     type: org.cloudfoundry.existing-service
