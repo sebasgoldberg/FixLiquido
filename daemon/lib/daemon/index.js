@@ -14,7 +14,11 @@ module.exports = class {
 		if (!this.active)
 			return;
 		this.running = true;
-		await this._runOneExecution();
+		try {
+			await this._runOneExecution();
+		} catch (err) {
+			console.error(err);
+		}
 		this.running = false;
 		if (!this.active)
 			return;

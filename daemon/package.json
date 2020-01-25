@@ -6,7 +6,8 @@
     "cfenv": "^1.1.0",
     "express": "4.14.0",
     "passport": "~0.4.0",
-    "@sap/xssec": "2.1.15"
+    "@sap/xssec": "2.1.15",
+    "request-promise": "^4.2.5"
   },
   "description": "Daemon para correção de POs",
   "devDependencies": {

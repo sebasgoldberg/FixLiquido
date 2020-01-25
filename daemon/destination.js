@@ -90,7 +90,6 @@ function createToken(destAuthUrl, clientId, clientSecret) {
 function getDestination(destinationService, access_token, destinationName) {
     return new Promise(function(resolve, reject) {
         const destination = xsenv.getServices({ destination: destinationService }).destination;
-        console.log("ACCESS TOKEN = "+access_token);
         // Note that we use the uri and not the url!!!!
 
         request({
@@ -106,7 +105,6 @@ function getDestination(destinationService, access_token, destinationName) {
                     console.error(`Error retrieving destination ${error.toString()}`);
                     reject(error);
                 } else {
-                    console.log(`Retrieved destination ${JSON.stringify(body)}`);
                     resolve(body.destinationConfiguration);
                 }
             });
