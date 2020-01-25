@@ -6,7 +6,7 @@ const path = require('path'),
     cfenv = require('cfenv'),
     appEnv = cfenv.getAppEnv();
 
-var destination = require("./destination");
+var destination = require("./lib/destination");
 const destinationService = "dest_FixLiquido";
 // //const cfenv = require("cfenv");
 

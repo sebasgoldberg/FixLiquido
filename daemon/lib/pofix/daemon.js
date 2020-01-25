@@ -1,32 +1,35 @@
 var Daemon = require('../daemon');
 var POAPI = require('../api/PO');
+const log = require('../log');
+const Item = require('../model/POItem');
 
 class POFixDaemon extends Daemon{
 	
 	constructor(){
 		super();
-		this.POAPI = new POAPI();
-	}
-	
-	ready(){
-		return this.POAPI.ready();
 	}
 	
 	async fixPOs(){
-		if (!this.ready())
-			throw "Daemon not ready to execute.";
-		let pendingPOs = await this.POAPI.getPendingPOs();
-		return pendingPOs;
+		let pendingItems = await POAPI.getPendingItems();
+		pendingItems
+			.map( data => new Item(data) )
+			.forEach( item => {
+				try{
+					await item.fix()
+				}catch(e){
+					log.error(`Error when fixing item: ${JSON.stringify(e)}`);
+				}
+			})
 	}
 	
 	async _runOneExecution(){
-		console.log('Inicio');
+		log.log('Execution begins.');
 		try{
-			console.log(JSON.stringify(await this.fixPOs()));
+			await this.fixPOs();
 		} catch(e){
-			console.error(e);
+			log.error(e);
 		}
-		console.log('Fim');
+		log.log('Execution end.');
 	}
 
 }

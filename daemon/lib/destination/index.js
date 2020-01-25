@@ -1,7 +1,8 @@
 'use strict';
 const request = require('request');
 const xsenv = require('@sap/xsenv');
-const API_EndPoint = "Fachesf";
+const log = require('../log');
+
 /***
  * Extract client id, client secret and url from the bound Destinations service VCAP_SERVICES object
  *
@@ -102,7 +103,7 @@ function getDestination(destinationService, access_token, destinationName) {
             },
             function(error, response, body) {
                 if (error) {
-                    console.error(`Error retrieving destination ${error.toString()}`);
+                    log.error(`Error retrieving destination ${error.toString()}`);
                     reject(error);
                 } else {
                     resolve(body.destinationConfiguration);
@@ -121,12 +122,10 @@ function getDestinationFromName(destinationService, destinationName) {
                 return getDestination(destinationService, access_token, destinationName);
             })
             .then(function (destination) {
-                //const url = `${destination.URL}`;
-                //console.log(`Accessing ODATA URL ${url}`);
                 resolve(destination);
             })
             .catch(function (error) {
-                console.error(`Error getting destination`);
+                log.error(`Error getting destination`);
                 reject(error);
             });
     });

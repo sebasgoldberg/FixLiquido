@@ -1,3 +1,5 @@
+const log = require('../log');
+
 module.exports = class {
 
 	constructor(){
@@ -7,7 +9,7 @@ module.exports = class {
 	}
 
 	async _runOneExecution(){
-		console.log(`${new Date().toLocaleString()}: You shoud redefine _runOneExecution method.`)
+		log.log(`${new Date().toLocaleString()}: You shoud redefine _runOneExecution method.`)
 	}
 
 	async _runOneExecutionAndScheduleNext(){
@@ -17,7 +19,7 @@ module.exports = class {
 		try {
 			await this._runOneExecution();
 		} catch (err) {
-			console.error(err);
+			log.error(err);
 		}
 		this.running = false;
 		if (!this.active)

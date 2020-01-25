@@ -1,39 +1,27 @@
 var rp = require('request-promise');
-var destination = require("../../destination");
-const destinationService = "dest_FixLiquido";
+const config = require('../config');
+const log = require('../log');
 
 let API = class {
 
 	constructor(){
-		this._ready = false;
-		destination.getDestination(destinationService, "s4hc")
-			.then( dest => {
-				this.s4hc = dest;
-				this._ready = true;
-			})
-			.catch( e => console.error(`Error when retrieving S4HC destination: ${JSON.stringify(e)}`) );
+		this.POODataPath = '/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV';
 	}
-	
-	ready(){
-		return this._ready;
-	}
-	
-	async getPendingPOs(){
+
+	async getPendingItems(){
 		var options = {
-		    uri: `${this.s4hc.URL}/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrderItem`,
+		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
 		    	'$format': 'json',
 		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount',
 		    	'$filter': 'YY1_PrecoLiqCorrigido_PDI eq false',
+		    	// @todo Eliminar ou criar logica de lotes.
 		    	'$top': '10',
 		    },
 			auth: {
-				user: this.s4hc.User,
-				pass: this.s4hc.Password,
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
 			},
-		    // headers: {
-		    //     'Authorization': 'Basic ' + Buffer.from(`${this.s4hc.User}:${this.s4hc.Password}`).toString('base64'),
-		    // },
 		    json: true // Automatically parses the JSON string in the response
 		};
 
@@ -41,6 +29,50 @@ let API = class {
 		
 		return body.d.results
 	}
+	
+	async getCsrfToken(){
+		var options = {
+		    uri: `${config.destination.s4hc.URL}${this.POODataPath}`,
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+			headers: {
+				'X-CSRF-Token': 'Fetch'
+			},
+		    resolveWithFullResponse: true
+		};
+
+		let response = await rp(options);
+		
+		return response.headers['x-csrf-token'];
+	}
+	
+	getUrl(PurchaseOrder, PurchaseOrderItem){
+		return 
+			`${config.destination.s4hc.URL}${this.POODataPath}`+
+			`/A_PurchaseOrderItem(PurchaseOrder='${PurchaseOrder}',PurchaseOrderItem='${PurchaseOrderItem}')`;
+	}
+	
+	async setItemAsFixed(PurchaseOrder, PurchaseOrderItem){
+		var options = {
+			method: 'PATCH',
+		    uri: this.getUrl(),
+		    body: {
+		    	YY1_PrecoLiqCorrigido_PDI: true
+		    },
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true,
+		    headers: {
+		    	'x-csrf-token': await this.getCsrfToken()
+		    }
+		};
+
+		await rp(options);
+	}
 }
 
-module.exports = API;
+module.exports = new API();
