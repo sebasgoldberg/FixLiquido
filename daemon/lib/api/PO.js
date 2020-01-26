@@ -1,6 +1,5 @@
 var rp = require('request-promise');
 const config = require('../config');
-const log = require('../log');
 
 let API = class {
 
@@ -16,7 +15,7 @@ let API = class {
 		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount',
 		    	'$filter': 'YY1_PrecoLiqCorrigido_PDI eq false',
 		    	// @todo Eliminar ou criar logica de lotes.
-		    	'$top': '10',
+		    	'$top': '1',
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
@@ -73,6 +72,28 @@ let API = class {
 
 		await rp(options);
 	}
+
+	async fixNetPrice(PurchaseOrder, PurchaseOrderItem, NetPriceAmount){
+		var options = {
+			method: 'PATCH',
+		    uri: this.getUrl(),
+		    body: {
+		    	YY1_PrecoLiqCorrigido_PDI: true,
+		    	NetPriceAmount: NetPriceAmount,
+		    },
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true,
+		    headers: {
+		    	'x-csrf-token': await this.getCsrfToken()
+		    }
+		};
+
+		await rp(options);
+	}
+
 }
 
 module.exports = new API();

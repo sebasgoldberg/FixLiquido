@@ -6,31 +6,13 @@ module.exports = class Trace{
 		this.data = data;
 	}
 	
-	static async create(data){
-		let trace = new Trace(data);
-		await this.fetchPayload();
-		return trace;
-	}
-
-	async fetchPayload(){
-		let log = await TaxService.getLogFromGUID(this.data.GUID);
-		this.payload = JSON.parse(log.requestPayload);
+	async getPayload(){
+		let traceLog = await TaxService.getLogFromGUID(this.data.GUID);
+		return JSON.parse(traceLog.requestPayload);
 	}
 	
-	getQuantity(){
-		return this.payload.Items[0].quantity;
-	}
-
-	getUnitPrice(){
-		return this.payload.Items[0].unitPrice;
-	}
-
-	setGross(){
-		this.payload.grossOrNet = 'g';
+	getGUID(){
+		return this.data.GUID;
 	}
 	
-	async recalculateTaxes(){
-		return await TaxService.quote(this.payload);
-	}
-
 }

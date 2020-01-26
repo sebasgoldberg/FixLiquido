@@ -24,6 +24,49 @@ let API = class {
 		
 		return body.d.results.pop();
 	}
+
+	async getCsrfToken(){
+		var options = {
+		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO`,
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+			headers: {
+				'X-CSRF-Token': 'Fetch'
+			},
+		    resolveWithFullResponse: true
+		};
+
+		let response = await rp(options);
+		
+		return response.headers['x-csrf-token'];
+	}
+
+	async registerFix(Pedido, Item, TraceGUID, BrutoOrigem, LiquidoCalculado){
+		var options = {
+			method: 'POST',
+		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO`,
+		    body: {
+				Pedido: Pedido,
+				Item: Item,
+				TraceGUID: TraceGUID,
+				BrutoOrigem: BrutoOrigem,
+				LiquidoCalculado: LiquidoCalculado
+		    },
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true,
+		    headers: {
+		    	'x-csrf-token': await this.getCsrfToken()
+		    }
+		};
+
+		await rp(options);
+	}
+
 }
 
 module.exports = new API();
