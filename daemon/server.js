@@ -75,6 +75,17 @@ app.get('/stop', function(oReq, oRes) {
 
 });
 
+const config = require('./lib/config');
+
+app.get('/config/reload', function(oReq, oRes) {
+	
+	config.reload();
+	
+
+	oRes.send('Reloaded');
+
+});
+
 app.get('/dest', function(oReq, oRes) {
     //oRes.send("Hello");
 

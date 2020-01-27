@@ -1,4 +1,5 @@
 const TaxService = require('../api/tax');
+const log = require('../log');
 
 module.exports = class{
 
@@ -10,7 +11,14 @@ module.exports = class{
 
 		payload.setGross();
 
-		let quoteResponseBody = await TaxService.quote(this.payload.getData());
+		let quoteResponseBody;
+
+		try{
+			quoteResponseBody = await TaxService.quote(this.payload.getData());
+		}catch(e){
+			log.error("Erro ao tentar calcular os impostos");
+			throw e;
+		}
 
 		let taxTypeCodes;
 

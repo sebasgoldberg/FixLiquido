@@ -5,7 +5,7 @@ let API = class {
 
 	async getLastFix(Pedido, Item){
 		var options = {
-		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO`,
+		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO/`,
 		    qs: {
 		    	'$format': 'json',
 		    	'$select': 'LiquidoCalculado',
@@ -43,7 +43,7 @@ let API = class {
 		return response.headers['x-csrf-token'];
 	}
 
-	async registerFix(Pedido, Item, TraceGUID, BrutoOrigem, LiquidoCalculado){
+	async registerFix(Pedido, Item, TraceGUID, BrutoOrigem, QuantidadeOrigem, LiquidoCalculado, QuantidadeCalculada){
 		var options = {
 			method: 'POST',
 		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO`,
@@ -52,7 +52,9 @@ let API = class {
 				Item: Item,
 				TraceGUID: TraceGUID,
 				BrutoOrigem: BrutoOrigem,
-				LiquidoCalculado: LiquidoCalculado
+				QuantidadeOrigem: QuantidadeOrigem,
+				LiquidoCalculado: LiquidoCalculado,
+				QuantidadeCalculada: QuantidadeCalculada
 		    },
 			auth: {
 				user: config.destination.s4hc.User,

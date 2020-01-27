@@ -10,16 +10,20 @@ class POFixDaemon extends Daemon{
 	}
 	
 	async fixPOs(){
-		let pendingItems = await POAPI.getPendingItems();
-		pendingItems
-			.map( data => new Item(data) )
-			.forEach( item => {
-				try{
-					await item.fix()
-				}catch(e){
-					log.error(`Error when fixing item: ${JSON.stringify(e)}`);
-				}
-			})
+
+		let pendingItemsData = await POAPI.getPendingItems();
+		let pendingItems = pendingItemsData.map( data => new Item(data) );
+
+		// @todo Promise.all(pendingItems.map(async ...)) em caso de querer executar
+		// em paralelo. Cuidado com processar em paralelo itens de um mesmo pedido.
+		for (let item of pendingItems){
+			try{
+				await item.fix()
+			}catch(e){
+				log.error(`Error when fixing item: ${e}`);
+			}
+		}
+
 	}
 	
 	async _runOneExecution(){

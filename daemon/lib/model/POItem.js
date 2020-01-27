@@ -4,6 +4,7 @@ const POAPI = require('../api/PO');
 const TraceAPI = require('../api/trace');
 const Trace = require('../model/Trace');
 const NetCalculation = require('../model/NetCalculation')
+const log = require('../log');
 
 module.exports = class{
 
@@ -23,7 +24,12 @@ module.exports = class{
 	}
 	
 	async getLastFix(){
-		return await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+		try{
+			return await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+		}catch(e){
+			log.error("Erro ao tentar obter a ultima correção do item do histórico.");
+			throw e;
+		}
 	}
 	
 	async needsFix(){
@@ -37,15 +43,31 @@ module.exports = class{
 		
 		// Caso não coincida o valor atual com o valor do liquido calculado
 		// na ultima correção, então o item vai precisar de correção.
-		return (this.getValue() != lastFix.LiquidoCalculado);
+		return (lastFix.QuantidadeCalculada != this.data.OrderQuantity ||
+			lastFix.LiquidoCalculado != this.data.NetPriceAmount);
+
 	}
 	
 	async setAsFixed(){
-		await POAPI.setItemAsFixed(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+		try{
+			await POAPI.setItemAsFixed(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+		}catch(e){
+			log.error("Erro ao tentar marcar o item como corrigido.");
+			throw e;
+		}
 	}
 	
 	async getLastTrace(){
-		let traceData = await TraceAPI.getLastTrace(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+
+		let traceData;
+
+		try{
+			traceData = await TraceAPI.getLastTrace(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+		}catch(e){
+			log.error("Erro ao tentar obter o ultimo trace do item.");
+			throw e;
+		}
+
 		if (traceData)
 			return new Trace(traceData);
 		return;
@@ -55,19 +77,31 @@ module.exports = class{
 
 		// Primeiro registramos o history. É mais seguro, já que caso não consigamos
 		// modificar o valor do item, em uma proxima execução será realizada a correção.
-		await HistoryAPI.registerFix(
-			this.data.PurchaseOrder,
-			this.data.PurchaseOrderItem,
-			this.trace.getGUID(),
-			this.data.NetPriceAmount,
-			netPrice
-			);
+		try{
+			await HistoryAPI.registerFix(
+				this.data.PurchaseOrder,
+				this.data.PurchaseOrderItem,
+				this.trace.getGUID(),
+				this.data.NetPriceAmount,
+				this.data.OrderQuantity,
+				netPrice,
+				this.data.OrderQuantity
+				);
+		}catch(e){
+			log.error("Erro ao tentar registrar o historico de correção para o item.");
+			throw e;
+		}
 
-		await POAPI.fixNetPrice(
-			this.data.PurchaseOrder,
-			this.data.PurchaseOrderItem,
-			netPrice,
-			);
+		try{
+			await POAPI.fixNetPrice(
+				this.data.PurchaseOrder,
+				this.data.PurchaseOrderItem,
+				netPrice,
+				);
+		}catch(e){
+			log.error("Erro ao tentar corrigir o valor do item.");
+			throw e;
+		}
 
 	}
 	

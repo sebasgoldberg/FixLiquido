@@ -1,5 +1,6 @@
 var rp = require('request-promise');
 const config = require('../config');
+const log = require('../log');
 
 let API = class {
 	
@@ -12,10 +13,7 @@ let API = class {
 				user: config.destination.taxService.clientId,
 				pass: config.destination.taxService.clientSecret,
 			},
-		    json: true,
-		    headers: {
-		    	'x-csrf-token': await this.getCsrfToken()
-		    }
+		    json: true
 		};
 
 		let body = await rp(options);
@@ -23,16 +21,24 @@ let API = class {
 		this.bearerToken = body.access_token;
 		
 		this.tokenExpiresDate = new Date();
-		this.tokenExpiresDate.setMiliseconds(
-			this.tokenExpiresDate.getMiliseconds()+body.expires_in
+		this.tokenExpiresDate.setMilliseconds(
+			this.tokenExpiresDate.getMilliseconds()+body.expires_in
 			);
 	}
 
 	async getBearerToken(){
 		
 		// Em caso que o token não esteja definido ou tenha expirado...
-		if (!this.bearerToken || this.tokenExpiresDate < (new Date()))
-			await this.fetchBearerToken();
+		if (!this.bearerToken || this.tokenExpiresDate < (new Date())){
+
+			try{
+				await this.fetchBearerToken();
+			}catch(e){
+				log.error("Erro ao tentar obter Bearer token do serviço de impostos.");
+				throw e;
+			}
+
+		}
 		
 		return this.bearerToken;
 			

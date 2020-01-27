@@ -1,4 +1,3 @@
-const TaxService = require('../api/tax');
 
 module.exports = class Trace{
 

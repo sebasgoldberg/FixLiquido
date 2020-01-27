@@ -15,7 +15,7 @@ let API = class {
 		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount',
 		    	'$filter': 'YY1_PrecoLiqCorrigido_PDI eq false',
 		    	// @todo Eliminar ou criar logica de lotes.
-		    	'$top': '1',
+		    	'$top': '2',
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
