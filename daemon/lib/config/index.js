@@ -7,7 +7,7 @@ class Config{
 	constructor(){
 		this.reload();
 		this.params = {
-			itemsByExecution: 10
+			itemsByExecution: 0
 		};
 	}
 	

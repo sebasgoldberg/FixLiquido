@@ -29,6 +29,9 @@ app.use(
 var POFixDaemon = new require('./lib/pofix/daemon');
 var POFixDaemonInstance = new POFixDaemon();
 
+POFixDaemonInstance.start();
+
+
 app.get('/start', function(oReq, oRes) {
 	
 	POFixDaemonInstance.start();
