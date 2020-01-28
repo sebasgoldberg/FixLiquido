@@ -9,7 +9,7 @@ module.exports = class{
 
 	async getNetUnitPrice(){
 
-		payload.setGross();
+		this.payload.setGross();
 
 		let quoteResponseBody;
 

@@ -1,5 +1,6 @@
 const TaxService = require('../api/tax');
 const log = require('../log');
+const Payload = require('../model/Payload');
 
 module.exports = class Trace{
 
@@ -17,7 +18,7 @@ module.exports = class Trace{
 			throw e;
 		}
 
-		return JSON.parse(traceLog.requestPayload);
+		return new Payload(JSON.parse(traceLog.requestPayload));
 	}
 	
 	getGUID(){

@@ -13,12 +13,15 @@ let API = class {
 				user: config.destination.taxService.clientId,
 				pass: config.destination.taxService.clientSecret,
 			},
-		    json: true
+		    json: true,
+		    resolveWithFullResponse: true
 		};
 
-		let body = await rp(options);
+		let response = await rp(options);
+		let body = response.body;
 		
 		this.bearerToken = body.access_token;
+		this.setCookies = response.headers['set-cookie'].join('; ');
 		
 		this.tokenExpiresDate = new Date();
 		this.tokenExpiresDate.setMilliseconds(
@@ -27,6 +30,9 @@ let API = class {
 	}
 
 	async getBearerToken(){
+
+		// @todo Eliminar.		
+		return config.destination.taxService.Password;
 		
 		// Em caso que o token não esteja definido ou tenha expirado...
 		if (!this.bearerToken || this.tokenExpiresDate < (new Date())){
@@ -40,11 +46,16 @@ let API = class {
 
 		}
 		
-		return this.bearerToken;
+		return {
+			bearerToken: this.bearerToken,
+			setCookies: this.setCookies
+		};
 			
 	}
 
 	async getLogFromGUID(GUID){
+
+		let tokenData = await this.getBearerToken();
 
 		var options = {
 		    uri: `${config.destination.taxService.URL}/TaxService/tenantAccessLogs`,
@@ -52,8 +63,12 @@ let API = class {
 		    	'documentId': GUID,
 		    },
 			auth: {
-				bearer: await this.getBearerToken()
+				//bearer: tokenData.bearerToken
+				bearer: tokenData
 			},
+		    /*headers: {
+		    	'Cookie': tokenData.setCookies,
+		    },*/
 		    json: true
 		};
 
@@ -65,12 +80,18 @@ let API = class {
 
 	async quote(payload){
 
+		let tokenData = await this.getBearerToken();
+
 		var options = {
 		    method: 'POST',
 		    uri: `${config.destination.taxService.URL}/TaxService/TaxService/quote`,
 			auth: {
-				bearer: await this.getBearerToken()
+				//bearer: tokenData.bearerToken
+				bearer: tokenData
 			},
+		    /*headers: {
+		    	'Cookie': tokenData.setCookies,
+		    },*/
 			body: payload,
 		    json: true
 		};

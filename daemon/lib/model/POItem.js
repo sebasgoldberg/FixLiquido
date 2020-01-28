@@ -107,7 +107,7 @@ module.exports = class{
 	
 	async applyFix(payload){
 		let netCalculation = new NetCalculation(payload);
-		let netUnitPrice = await this.getNetUnitPrice();
+		let netUnitPrice = await netCalculation.getNetUnitPrice();
 		await this.modifyNetPrice(netUnitPrice);
 	}
 	
@@ -117,27 +117,39 @@ module.exports = class{
 		if (!(await this.needsFix())){
 			// Atualizamos o item como corrigido.
 			await this.setAsFixed()
+			log.log(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} `+
+				`não precisava de correção. Foi marcado como corrigido.`);
 			return;
 		}
 		
 		this.trace = await this.getLastTrace();
 		
 		// En caso de não obter nenhum trace.
-		if (!this.trace)
+		if (!this.trace){
 			// Não fazemos nada, já que ainda a API de trace deveria
 			// ser atualizada.
+			log.warn(`Não foram obtidas informações de trace para o PO item `+
+				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}. `+
+				`Não sera aplicada correção por enquanto.`);
 			return;
+		}
 
 		let payload = await this.trace.getPayload();
 
 		// Se o valor do payload, não coincide com o valor do item...
 		if (payload.getQuantity() != this.data.OrderQuantity ||
-			payload.getUnitPrice() != this.data.NetPriceAmount)
+			payload.getUnitPrice() != this.data.NetPriceAmount){
 			// Não fazemos nada, já que ainda a API de trace deveria
 			// ser atualizada.
+			log.warn(`Informações de trace desatualizadas para o PO item `+
+				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}. `+
+				`Não sera aplicada correção por enquanto.`);
+
 			return;
+		}
 
 		await this.applyFix(payload);
 		
+		log.log(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} corrigido com sucesso.`);
 	}
 }

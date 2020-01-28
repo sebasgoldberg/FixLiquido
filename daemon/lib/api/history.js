@@ -40,10 +40,16 @@ let API = class {
 
 		let response = await rp(options);
 		
-		return response.headers['x-csrf-token'];
+		return {
+			csrfToken: response.headers['x-csrf-token'],
+			setCookie: response.headers['set-cookie'].join('; '),
+		};
 	}
 
 	async registerFix(Pedido, Item, TraceGUID, BrutoOrigem, QuantidadeOrigem, LiquidoCalculado, QuantidadeCalculada){
+		
+		let csrfTokenData = await this.getCsrfToken()
+		
 		var options = {
 			method: 'POST',
 		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO`,
@@ -51,10 +57,10 @@ let API = class {
 				Pedido: Pedido,
 				Item: Item,
 				TraceGUID: TraceGUID,
-				BrutoOrigem: BrutoOrigem,
-				QuantidadeOrigem: QuantidadeOrigem,
-				LiquidoCalculado: LiquidoCalculado,
-				QuantidadeCalculada: QuantidadeCalculada
+				BrutoOrigem: BrutoOrigem.toString(),
+				QuantidadeOrigem: QuantidadeOrigem.toString(),
+				LiquidoCalculado: LiquidoCalculado.toString(),
+				QuantidadeCalculada: QuantidadeCalculada.toString()
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
@@ -62,7 +68,8 @@ let API = class {
 			},
 		    json: true,
 		    headers: {
-		    	'x-csrf-token': await this.getCsrfToken()
+		    	'x-csrf-token': csrfTokenData.csrfToken,
+		    	'Cookie': csrfTokenData.setCookie,
 		    }
 		};
 

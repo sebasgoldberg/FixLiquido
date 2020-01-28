@@ -6,6 +6,9 @@ class Config{
 
 	constructor(){
 		this.reload();
+		this.params = {
+			itemsByExecution: 10
+		};
 	}
 	
 	async reload(){
@@ -15,7 +18,8 @@ class Config{
 		try{
 			[this.destination.s4hc, this.destination.taxService] = await Promise.all([
 				destination.getDestination(destinationService, "s4hc"), 
-				destination.getDestination(destinationService, "taxService")]
+				// @todo Mudar para taxService
+				destination.getDestination(destinationService, "taxServiceToken")]
 				);
 		}catch(e){
 			log.error(`Error when retrieving destinations: ${JSON.stringify(e)}`);

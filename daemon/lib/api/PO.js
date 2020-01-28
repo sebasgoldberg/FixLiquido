@@ -7,15 +7,13 @@ let API = class {
 		this.POODataPath = '/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV';
 	}
 
-	async getPendingItems(){
+	async getPendingItems(top){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
 		    	'$format': 'json',
 		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount',
 		    	'$filter': 'YY1_PrecoLiqCorrigido_PDI eq false',
-		    	// @todo Eliminar ou criar logica de lotes.
-		    	'$top': '2',
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
@@ -23,6 +21,9 @@ let API = class {
 			},
 		    json: true // Automatically parses the JSON string in the response
 		};
+		
+		if (top)
+			options.qs['$top'] = top;
 
 		let body = await rp(options);
 		
@@ -44,19 +45,25 @@ let API = class {
 
 		let response = await rp(options);
 		
-		return response.headers['x-csrf-token'];
+		return {
+			csrfToken: response.headers['x-csrf-token'],
+			setCookie: response.headers['set-cookie'].join('; '),
+		};
+
 	}
 	
 	getUrl(PurchaseOrder, PurchaseOrderItem){
-		return 
-			`${config.destination.s4hc.URL}${this.POODataPath}`+
+		return `${config.destination.s4hc.URL}${this.POODataPath}`+
 			`/A_PurchaseOrderItem(PurchaseOrder='${PurchaseOrder}',PurchaseOrderItem='${PurchaseOrderItem}')`;
 	}
 	
 	async setItemAsFixed(PurchaseOrder, PurchaseOrderItem){
+
+		let csrfTokenData = await this.getCsrfToken();
+		
 		var options = {
 			method: 'PATCH',
-		    uri: this.getUrl(),
+		    uri: this.getUrl(PurchaseOrder, PurchaseOrderItem),
 		    body: {
 		    	YY1_PrecoLiqCorrigido_PDI: true
 		    },
@@ -66,7 +73,8 @@ let API = class {
 			},
 		    json: true,
 		    headers: {
-		    	'x-csrf-token': await this.getCsrfToken()
+		    	'x-csrf-token': csrfTokenData.csrfToken,
+		    	'Cookie': csrfTokenData.setCookie,
 		    }
 		};
 
@@ -74,12 +82,14 @@ let API = class {
 	}
 
 	async fixNetPrice(PurchaseOrder, PurchaseOrderItem, NetPriceAmount){
+		let csrfTokenData = await this.getCsrfToken();
+		
 		var options = {
 			method: 'PATCH',
-		    uri: this.getUrl(),
+		    uri: this.getUrl(PurchaseOrder, PurchaseOrderItem),
 		    body: {
 		    	YY1_PrecoLiqCorrigido_PDI: true,
-		    	NetPriceAmount: NetPriceAmount,
+		    	NetPriceAmount: NetPriceAmount.toString(),
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
@@ -87,7 +97,8 @@ let API = class {
 			},
 		    json: true,
 		    headers: {
-		    	'x-csrf-token': await this.getCsrfToken()
+		    	'x-csrf-token': csrfTokenData.csrfToken,
+		    	'Cookie': csrfTokenData.setCookie,
 		    }
 		};
 

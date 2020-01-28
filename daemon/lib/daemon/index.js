@@ -4,7 +4,7 @@ module.exports = class {
 
 	constructor(){
 		this.active = false;
-		this.sleepSeconds = 10;
+		this.sleepMilliseconds = 10*1000;
 		this.running = false;
 	}
 
@@ -30,7 +30,7 @@ module.exports = class {
 	_scheduleNext(){
 		if (this.running)
 			return;
-		setTimeout(this._runOneExecutionAndScheduleNext.bind(this), this.sleepSeconds*1000);
+		setTimeout(this._runOneExecutionAndScheduleNext.bind(this), this.sleepMilliseconds);
 	}
 
 	start(){
@@ -39,9 +39,13 @@ module.exports = class {
 		this.active = true;
 		this._scheduleNext();
 	}
-	
+
 	stop(){
 		this.active = false;
+	}
+
+	setSleepMilliseconds(sleepMilliseconds){
+		this.sleepMilliseconds = sleepMilliseconds;
 	}
 	
 }

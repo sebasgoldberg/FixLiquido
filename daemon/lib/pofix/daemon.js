@@ -2,6 +2,7 @@ var Daemon = require('../daemon');
 var POAPI = require('../api/PO');
 const log = require('../log');
 const Item = require('../model/POItem');
+const config = require('../config');
 
 class POFixDaemon extends Daemon{
 	
@@ -11,7 +12,7 @@ class POFixDaemon extends Daemon{
 	
 	async fixPOs(){
 
-		let pendingItemsData = await POAPI.getPendingItems();
+		let pendingItemsData = await POAPI.getPendingItems(config.params.itemsByExecution);
 		let pendingItems = pendingItemsData.map( data => new Item(data) );
 
 		// @todo Promise.all(pendingItems.map(async ...)) em caso de querer executar
