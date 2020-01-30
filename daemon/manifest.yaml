@@ -1,0 +1,9 @@
+---
+applications:
+- name: daemon
+  random-route: true
+  path: .
+  memory: 256M
+  services:
+    - uaa_FixLiquido
+    - dest_FixLiquido

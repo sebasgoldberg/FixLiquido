@@ -2,6 +2,7 @@
 const request = require('request');
 const xsenv = require('@sap/xsenv');
 const log = require('../log');
+var rp = require('request-promise');
 
 /***
  * Extract client id, client secret and url from the bound Destinations service VCAP_SERVICES object
@@ -10,10 +11,12 @@ const log = require('../log');
  *
  * @returns {Promise<any>}
  */
-function getCredentials(destinationService) {
+function getCredentials() {
     return new Promise(function(resolve) {
         const destination = xsenv.getServices({
-            destination: destinationService
+            destination: {
+                tag: 'destination'
+            }
         }).destination;
 
         const credentials = {
@@ -88,13 +91,17 @@ function createToken(destAuthUrl, clientId, clientSecret) {
  * @param destinationName : the name of the destination to retrieve.
  * @returns {Promise<any>}
  */
-function getDestination(destinationService, access_token, destinationName) {
+function getDestination(access_token, destinationName) {
     return new Promise(function(resolve, reject) {
-        const destination = xsenv.getServices({ destination: destinationService }).destination;
+        const destination = xsenv.getServices({ 
+            destination: {
+                tag: 'destination'
+            }
+        }).destination;
         // Note that we use the uri and not the url!!!!
 
         request({
-                url: `${destination.uri}/destination-configuration/v1/destinations/${destinationName}`,
+                url: `${destination.uri}/destination-configuration/v1/instanceDestinations/${destinationName}`,
                 method: 'GET',
                 auth: {
                     bearer: access_token
@@ -106,20 +113,21 @@ function getDestination(destinationService, access_token, destinationName) {
                     log.error(`Error retrieving destination ${error.toString()}`);
                     reject(error);
                 } else {
-                    resolve(body.destinationConfiguration);
+                    resolve(body);
                 }
             });
     });
 }
 
-function getDestinationFromName(destinationService, destinationName) {
+// @todo Eliminar destinationServiceName.
+function getDestinationFromName(destinationServiceName,destinationName) {
     return new Promise(function (resolve, reject) {
-        getCredentials(destinationService)
+        getCredentials()
             .then(function (credentials) {
                 return createToken(credentials.url, credentials.clientid, credentials.clientsecret);
             })
             .then(function (access_token) {
-                return getDestination(destinationService, access_token, destinationName);
+                return getDestination(access_token, destinationName);
             })
             .then(function (destination) {
                 resolve(destination);
@@ -131,6 +139,79 @@ function getDestinationFromName(destinationService, destinationName) {
     });
 }
 
+async function createDestination(body, token) {
+
+    const destination = xsenv.getServices({ 
+        destination: {
+            tag: 'destination'
+        }
+    }).destination;
+    // Note that we use the uri and not the url!!!!
+
+    var options = {
+        method: 'POST',
+        uri: `${destination.uri}/destination-configuration/v1/instanceDestinations`,
+        body: body,
+        auth: {
+            bearer: token
+        },
+        json: true
+    };
+
+    await rp(options);
+
+    
+}
+
+async function deleteDestination(destinationName, token) {
+
+    const destination = xsenv.getServices({ 
+        destination: {
+            tag: 'destination'
+        }
+    }).destination;
+
+    var options = {
+        method: 'DELETE',
+        uri: `${destination.uri}/destination-configuration/v1/instanceDestinations/${destinationName}`,
+        auth: {
+            bearer: token
+        },
+        json: true
+    };
+
+    await rp(options);
+    
+}
+
+async function addThis(destinationName) {
+
+    let credentials = await getCredentials();
+    let token = await createToken(credentials.url, credentials.clientid, credentials.clientsecret);
+
+    try {
+        await deleteDestination(destinationName, token);
+    } catch (e) {
+        console.error(e);
+    }
+
+    try {
+        await createDestination({
+            Name: destinationName,
+            Type: "HTTP",
+            URL: 'https://google.com',
+            Authentication: "NoAuthentication",
+            ProxyType: "Internet",
+            ForwardAuthToken: true,
+        }, token);    
+
+    } catch (e) {
+        console.error(e);
+    }
+    
+}
+
 module.exports = {
-    getDestination: getDestinationFromName
+    getDestination: getDestinationFromName,
+    addThis: addThis,
 };

@@ -1,6 +1,9 @@
 /*eslint no-console: 0*/
 "use strict";
 
+const destination = require('./lib/destination');
+destination.addThis('daemon_api');
+
 const express = require('express');
 const passport = require("passport");
 const xssec = require("@sap/xssec");
