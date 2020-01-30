@@ -189,6 +189,9 @@ async function addThis(destinationName) {
     let credentials = await getCredentials();
     let token = await createToken(credentials.url, credentials.clientid, credentials.clientsecret);
 
+    let cfenv = require("cfenv")
+    let appEnv = cfenv.getAppEnv()
+
     try {
         await deleteDestination(destinationName, token);
     } catch (e) {
@@ -199,7 +202,7 @@ async function addThis(destinationName) {
         await createDestination({
             Name: destinationName,
             Type: "HTTP",
-            URL: 'https://google.com',
+            URL: appEnv.url,
             Authentication: "NoAuthentication",
             ProxyType: "Internet",
             ForwardAuthToken: true,
