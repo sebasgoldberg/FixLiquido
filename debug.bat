@@ -1,0 +1,1 @@
+cf ssh %1 -L 9229:localhost:9229 -c "cd && cd deps/0/node/bin/ && PS_LINE=$( ps aux | grep node | grep -v 'sh -c node' | grep -v 'grep' ) && NODE_PID=$( echo $PS_LINE | cut -f2 -d' ' ) && ./node inspect -p $NODE_PID"
