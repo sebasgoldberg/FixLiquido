@@ -7,3 +7,4 @@ applications:
   services:
     - uaa_FixLiquido
     - dest_FixLiquido
+    - logsFixLiquido

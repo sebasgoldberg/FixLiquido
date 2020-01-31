@@ -117,7 +117,7 @@ module.exports = class{
 		if (!(await this.needsFix())){
 			// Atualizamos o item como corrigido.
 			await this.setAsFixed()
-			log.log(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} `+
+			log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} `+
 				`não precisava de correção. Foi marcado como corrigido.`);
 			return;
 		}
@@ -150,6 +150,6 @@ module.exports = class{
 
 		await this.applyFix(payload);
 		
-		log.log(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} corrigido com sucesso.`);
+		log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} corrigido com sucesso.`);
 	}
 }

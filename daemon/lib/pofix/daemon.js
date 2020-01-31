@@ -28,13 +28,13 @@ class POFixDaemon extends Daemon{
 	}
 	
 	async _runOneExecution(){
-		log.log('Execution begins.');
+		log.info('Execution begins.');
 		try{
 			await this.fixPOs();
 		} catch(e){
 			log.error(e);
 		}
-		log.log('Execution end.');
+		log.info('Execution end.');
 	}
 
 }

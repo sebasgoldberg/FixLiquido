@@ -11,6 +11,8 @@ const xsenv = require("@sap/xsenv");
 const cfenv = require('cfenv')
 const appEnv = cfenv.getAppEnv();
 
+const log = require('./lib/log');
+
 var app = express();
 
 //Build a JWT Strategy from the bound UAA resource
@@ -72,6 +74,9 @@ app.get('/params/set', function(oReq, oRes) {
 	if (oReq.query.itemsByExecution)
 		config.params.itemsByExecution = Number(oReq.query.itemsByExecution);
 
+	if (oReq.query.loggingLevel)
+		log.setLoggingLevel(oReq.query.loggingLevel);
+
 	oRes.send('Modified');
 
 });
@@ -81,6 +86,7 @@ app.get('/params/get', function(oReq, oRes) {
 	oRes.send(JSON.stringify({
 		sleepMilliseconds: POFixDaemonInstance.sleepMilliseconds,
 		itemsByExecution: config.params.itemsByExecution,
+		loggingLevel: log.getLoggingLevel(),
 	}));
 
 });
