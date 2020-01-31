@@ -1,18 +1,11 @@
 {
   "welcomeFile": "AppRouterHome.html",
-  "authenticationMethod": "route",
   "routes": [
     {
     	"source": "^/daemon/(.*)$",
         "target": "$1",
 		"destination": "daemon_api",
-		"authenticationType": "xsuaa"
-	},
-	{
-		"source": "^/s4hc/(.*)$",
-		"target": "$1",
-		"destination": "s4hc",
-		"authenticationType": "xsuaa"
+		"scope": "$XSAPPNAME.Update"
 	}
   ]
 }

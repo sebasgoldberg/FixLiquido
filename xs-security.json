@@ -1,19 +1,43 @@
 {
-	"xsappname": "FixLiquido-00",
-    "tenant-mode": "dedicated",
+	"xsappname": "FixLiquido",
+	"description": "Daemon para correção de preço liquido em PO itens.",
+	"tenant-mode": "dedicated",
 	"scopes": [
 		{
-		  "name": "uaa.user",
-		  "description": "UAA"
+			"name": "$XSAPPNAME.Display",
+			"description": "Display Info."
+		},
+		{
+			"name": "$XSAPPNAME.Update",
+			"description": "Update Info."
+		},
+		{
+			"name": "uaa.user",
+			"description": "UAA"
 		}
 	],
 	"role-templates": [
 		{
-		  "name": "Token_Exchange",
-		  "description": "UAA",
-		  "scope-references": [
-		    "uaa.user"
-		  ]
+			"name": "Viewer",
+			"description": "View Info.",
+			"scope-references": [
+				"$XSAPPNAME.Display"
+			]
+		},
+		{
+			"name": "Editor",
+			"description": "Maintain Info",
+			"scope-references": [
+				"$XSAPPNAME.Display",
+				"$XSAPPNAME.Update"
+			]
+		},
+		{
+			"name": "Token_Exchange",
+			"description": "UAA",
+			"scope-references": [
+			  "uaa.user"
+			]
 		}
 	]
 }
