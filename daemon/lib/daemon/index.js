@@ -30,7 +30,7 @@ module.exports = class {
 	_scheduleNext(){
 		if (this.running)
 			return;
-		setTimeout(this._runOneExecutionAndScheduleNext.bind(this), this.sleepMilliseconds);
+		this.timeOutObject = setTimeout(this._runOneExecutionAndScheduleNext.bind(this), this.sleepMilliseconds);
 	}
 
 	start(){
@@ -42,6 +42,10 @@ module.exports = class {
 
 	stop(){
 		this.active = false;
+		if (this.timeOutObject){
+			clearTimeout(this.timeOutObject);
+			this.timeOutObject = undefined;
+		}
 	}
 
 	setSleepMilliseconds(sleepMilliseconds){
