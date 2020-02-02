@@ -9,7 +9,7 @@ module.exports = class {
 	}
 
 	async _runOneExecution(){
-		log.info(`${new Date().toLocaleString()}: You shoud redefine _runOneExecution method.`)
+		log.info(`You shoud redefine _runOneExecution method.`)
 	}
 
 	async _runOneExecutionAndScheduleNext(){
