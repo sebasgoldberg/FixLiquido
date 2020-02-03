@@ -21,20 +21,20 @@ class POFixDaemon extends Daemon{
 			try{
 				await item.fix()
 			}catch(e){
-				log.error(`Error when fixing item: ${e}`);
+				log.error(`Erro ao tentar corrigir o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}: ${e}`);
 			}
 		}
 
 	}
 	
 	async _runOneExecution(){
-		log.info('Execution begins.');
+		log.info('Execução iniciada.');
 		try{
 			await this.fixPOs();
 		} catch(e){
 			log.error(e);
 		}
-		log.info('Execution end.');
+		log.info('Execução finalizada.');
 	}
 
 }
