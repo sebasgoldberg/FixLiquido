@@ -43,9 +43,9 @@ module.exports = class{
 		
 		// Caso não coincida o valor atual com o valor do liquido calculado
 		// na ultima correção, então o item vai precisar de correção.
-		return (lastFix.QuantidadeCalculada != this.data.OrderQuantity ||
-			lastFix.LiquidoCalculado != this.data.NetPriceAmount);
-
+		//return (lastFix.QuantidadeCalculada != this.data.OrderQuantity ||
+		return (lastFix.LiquidoCalculado != this.data.NetPriceAmount);
+	
 	}
 	
 	async setAsFixed(){
@@ -107,7 +107,7 @@ module.exports = class{
 	
 	async applyFix(payload){
 		let netCalculation = new NetCalculation(payload);
-		let netUnitPrice = await netCalculation.getNetUnitPrice();
+		let netUnitPrice = (await netCalculation.getNetUnitPrice()).netUnitPrice;
 		await this.modifyNetPrice(netUnitPrice);
 	}
 	
@@ -137,8 +137,8 @@ module.exports = class{
 		let payload = await this.trace.getPayload();
 
 		// Se o valor do payload, não coincide com o valor do item...
-		if (payload.getQuantity() != this.data.OrderQuantity ||
-			payload.getUnitPrice() != this.data.NetPriceAmount){
+		if (Number(payload.getQuantity()) != Number(this.data.OrderQuantity) ||
+			Number(payload.getUnitPrice()) != Number(this.data.NetPriceAmount)){
 			// Não fazemos nada, já que ainda a API de trace deveria
 			// ser atualizada.
 			log.warn(`Informações de trace desatualizadas para o PO item `+

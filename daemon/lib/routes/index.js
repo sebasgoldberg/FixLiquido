@@ -67,4 +67,6 @@ const analysis = require('../routes/analysis')
 
 router.get('/analysis/last/state', analysis.lastState );
 
+router.get('/analysis/gross/calc/for/guid', analysis.grossCalcForGUID );
+
 module.exports = router;

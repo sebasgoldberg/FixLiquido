@@ -40,7 +40,10 @@ module.exports = class{
 
 		var quantity = parseFloat(this.payload.getQuantity());
 		
-		return net_value/quantity;
+		return {
+			netUnitPrice: net_value/quantity,
+			quoteResponseBody: quoteResponseBody
+		}
 
 	}
 

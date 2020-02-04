@@ -31,9 +31,6 @@ app.use(
 	})
 );
 
-var POFixDaemonInstance = require('./lib/pofix/instance');
-POFixDaemonInstance.start();
-
 const routes = require('./lib/routes');
 app.use('/', routes);
 
