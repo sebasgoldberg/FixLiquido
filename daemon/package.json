@@ -23,7 +23,8 @@
   "scripts": {
     "test": "node node_modules/jest/bin/jest --config jest.json",
     "test-coverage": "node node_modules/jest/bin/jest --coverage --config jest.json",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "debug": "nodemon --inspect server.js"
   },
   "engines": {
     "node": "12.x"

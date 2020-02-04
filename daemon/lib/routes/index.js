@@ -63,4 +63,8 @@ const trace = require('../routes/trace')
 
 router.get('/trace/add', trace.add );
 
+const analysis = require('../routes/analysis')
+
+router.get('/analysis/last/state', analysis.lastState );
+
 module.exports = router;

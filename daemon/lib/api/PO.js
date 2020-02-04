@@ -7,13 +7,12 @@ let API = class {
 		this.POODataPath = '/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV';
 	}
 
-	async getPendingItems(top, additionalFilter){
+	async getPendingItems(top, filter){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
 		    	'$format': 'json',
 		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount',
-		    	'$filter': 'YY1_PrecoLiqCorrigido_PDI eq false',
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
@@ -24,9 +23,9 @@ let API = class {
 		
 		if (top)
 			options.qs['$top'] = top;
-
-		if (additionalFilter)
-			options.qs['$filter'] += ` and ( ${additionalFilter} )`;
+		
+		if (filter)
+			options.qs['$filter'] = filter;
 
 		let body = await rp(options);
 		

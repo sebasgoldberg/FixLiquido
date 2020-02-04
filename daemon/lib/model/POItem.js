@@ -23,9 +23,9 @@ module.exports = class{
 		this.data = data;
 	}
 	
-	async getLastFix(){
+	async getLastFix(select){
 		try{
-			return await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+			return await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem, select);
 		}catch(e){
 			log.error("Erro ao tentar obter a ultima correção do item do histórico.");
 			throw e;
@@ -34,7 +34,7 @@ module.exports = class{
 	
 	async needsFix(){
 		
-		let lastFix = await this.getLastFix();
+		let lastFix = await this.getLastFix('LiquidoCalculado');
 		
 		// Em caso de não ter registro de correção, significa que precisa 
 		// de correção.

@@ -12,7 +12,11 @@ class POFixDaemon extends Daemon{
 	
 	async fixPOs(){
 
-		let pendingItemsData = await POAPI.getPendingItems(config.params.itemsByExecution, config.params.itemsAdditionalFilters);
+		let filter = 'YY1_PrecoLiqCorrigido_PDI eq false';
+		if (config.params.itemsAdditionalFilters)
+			filter += ` and ( ${config.params.itemsAdditionalFilters} )`;
+
+		let pendingItemsData = await POAPI.getPendingItems(config.params.itemsByExecution, filter);
 		let pendingItems = pendingItemsData.map( data => new Item(data) );
 
 		// @todo Promise.all(pendingItems.map(async ...)) em caso de querer executar

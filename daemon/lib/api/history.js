@@ -3,12 +3,11 @@ const config = require('../config');
 
 let API = class {
 
-	async getLastFix(Pedido, Item){
+	async getLastFix(Pedido, Item, select){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO/`,
 		    qs: {
 		    	'$format': 'json',
-		    	'$select': 'LiquidoCalculado',
 		    	'$filter': `Pedido eq '${Pedido}' and Item eq '${Item}'`,
 		    	'$orderby': 'SAP_CreatedDateTime desc',
 		    	'$top': '1',
@@ -19,6 +18,9 @@ let API = class {
 			},
 		    json: true // Automatically parses the JSON string in the response
 		};
+
+		if (select)
+			options['$select'] = select
 
 		let body = await rp(options);
 		

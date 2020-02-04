@@ -19,6 +19,18 @@
         {
             "type": "node",
             "request": "attach",
+            "name": "daemon-local",
+            "address": "localhost",
+            "port": 9229,
+            "localRoot": "${workspaceFolder}/daemon",
+            "remoteRoot": "${workspaceFolder}/daemon",
+            "skipFiles": [
+                "node_modules/**"
+                ]
+        },
+        {
+            "type": "node",
+            "request": "attach",
             "name": "router",
             "address": "localhost",
             "port": 9229,
