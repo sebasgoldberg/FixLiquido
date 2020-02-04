@@ -3,6 +3,27 @@ const config = require('../config');
 
 let API = class {
 
+	async getCsrfToken(){
+		var options = {
+		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_TAXSERVICETRACE_CDS/YY1_TAXSERVICETRACE`,
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+			headers: {
+				'X-CSRF-Token': 'Fetch'
+			},
+		    resolveWithFullResponse: true
+		};
+
+		let response = await rp(options);
+		
+		return {
+			csrfToken: response.headers['x-csrf-token'],
+			setCookie: response.headers['set-cookie'].join('; '),
+		};
+	}
+
 	async getLastTrace(DocumentNumber, ItemNumber){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_TAXSERVICETRACE_CDS/YY1_TAXSERVICETRACE`,
@@ -23,6 +44,37 @@ let API = class {
 		let body = await rp(options);
 		
 		return body.d.results.pop();
+	}
+
+	async addItem(GUID, CompanyCode, Application, DocumentCategory, DocumentNumber, FiscalYear, ItemNumber, TimeStamp){
+
+		let csrfTokenData = await this.getCsrfToken()
+		
+		var options = {
+			method: 'POST',
+		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_TAXSERVICETRACE_CDS/YY1_TAXSERVICETRACE`,
+		    body: {
+				GUID: GUID,
+				CompanyCode: CompanyCode,
+				Application: Application,
+				DocumentCategory: DocumentCategory,
+				DocumentNumber: DocumentNumber,
+				FiscalYear: FiscalYear,
+				ItemNumber: ItemNumber,
+				TimeStamp: TimeStamp
+		    },
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true,
+		    headers: {
+		    	'x-csrf-token': csrfTokenData.csrfToken,
+		    	'Cookie': csrfTokenData.setCookie,
+		    }
+		};
+
+		await rp(options);
 	}
 }
 

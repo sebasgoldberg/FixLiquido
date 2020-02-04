@@ -7,7 +7,8 @@ class Config{
 	constructor(){
 		this.reload();
 		this.params = {
-			itemsByExecution: 0
+			itemsByExecution: 0,
+			itemsAdditionalFilters: '',
 		};
 	}
 	

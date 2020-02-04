@@ -7,7 +7,7 @@ let API = class {
 		this.POODataPath = '/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV';
 	}
 
-	async getPendingItems(top){
+	async getPendingItems(top, additionalFilter){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
@@ -24,6 +24,9 @@ let API = class {
 		
 		if (top)
 			options.qs['$top'] = top;
+
+		if (additionalFilter)
+			options.qs['$filter'] += ` and ( ${additionalFilter} )`;
 
 		let body = await rp(options);
 		

@@ -31,67 +31,13 @@ app.use(
 	})
 );
 
-var POFixDaemon = new require('./lib/pofix/daemon');
-var POFixDaemonInstance = new POFixDaemon();
-
+var POFixDaemonInstance = require('./lib/pofix/instance');
 POFixDaemonInstance.start();
 
-
-app.get('/start', function(oReq, oRes) {
-	
-	POFixDaemonInstance.start();
-
-	oRes.send('Ativado');
-
-});
-
-app.get('/stop', function(oReq, oRes) {
-	
-	// active = false;
-
-	POFixDaemonInstance.stop();
-
-	oRes.send('Desativado');
-
-});
-
-const config = require('./lib/config');
-
-app.get('/config/reload', function(oReq, oRes) {
-	
-	config.reload();
-	
-
-	oRes.send('Reloaded');
-
-});
-
-app.get('/params/set', function(oReq, oRes) {
-	
-	if (oReq.query.sleepMilliseconds)
-		POFixDaemonInstance.setSleepMilliseconds(Number(oReq.query.sleepMilliseconds));
-
-	if (oReq.query.itemsByExecution)
-		config.params.itemsByExecution = Number(oReq.query.itemsByExecution);
-
-	if (oReq.query.loggingLevel)
-		log.setLoggingLevel(oReq.query.loggingLevel);
-
-	oRes.send('Modified');
-
-});
-
-app.get('/params/get', function(oReq, oRes) {
-	
-	oRes.send(JSON.stringify({
-		sleepMilliseconds: POFixDaemonInstance.sleepMilliseconds,
-		itemsByExecution: config.params.itemsByExecution,
-		loggingLevel: log.getLoggingLevel(),
-	}));
-
-});
+const routes = require('./lib/routes');
+app.use('/', routes);
 
 const iPort = appEnv.isLocal ? 3000: appEnv.port;
 app.listen(iPort, function () {
-    console.log(`Congrats, your producer app is listening on port ${iPort}!`);
+    log.info(`Congrats, your producer app is listening on port ${iPort}!`);
 });

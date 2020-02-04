@@ -12,12 +12,15 @@ class POFixDaemon extends Daemon{
 	
 	async fixPOs(){
 
-		let pendingItemsData = await POAPI.getPendingItems(config.params.itemsByExecution);
+		let pendingItemsData = await POAPI.getPendingItems(config.params.itemsByExecution, config.params.itemsAdditionalFilters);
 		let pendingItems = pendingItemsData.map( data => new Item(data) );
 
 		// @todo Promise.all(pendingItems.map(async ...)) em caso de querer executar
 		// em paralelo. Cuidado com processar em paralelo itens de um mesmo pedido.
 		for (let item of pendingItems){
+			// Em caso que o daemon seja desativado, finalizamos a execução.
+			if (!this.active)
+				return;
 			try{
 				await item.fix()
 			}catch(e){
