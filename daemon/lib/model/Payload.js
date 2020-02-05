@@ -22,7 +22,7 @@ module.exports = class Trace{
 	}
 	
 	isService(){
-		this.data.Items[0].itemType == "S"
+		return this.data.Items[0].itemType == "S"
 	}
 	
 }

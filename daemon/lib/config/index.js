@@ -9,6 +9,7 @@ class Config{
 		this.params = {
 			itemsByExecution: 0,
 			itemsAdditionalFilters: '',
+			alternativePurchasingGroups: { 101: '001' },
 		};
 	}
 	

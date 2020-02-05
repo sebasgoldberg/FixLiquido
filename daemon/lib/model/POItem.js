@@ -88,7 +88,7 @@ module.exports = class{
 				this.data.OrderQuantity
 				);
 		}catch(e){
-			log.error("Erro ao tentar registrar o historico de correção para o item.");
+			log.error(`Erro ao tentar registrar o historico de correção para o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;
 		}
 
@@ -99,7 +99,7 @@ module.exports = class{
 				netPrice,
 				);
 		}catch(e){
-			log.error("Erro ao tentar corrigir o valor do item.");
+			log.error(`Erro ao tentar corrigir o valor do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;
 		}
 

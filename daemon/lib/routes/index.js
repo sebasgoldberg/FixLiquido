@@ -30,32 +30,43 @@ router.get('/config/reload', function(oReq, oRes) {
 
 });
 
+function getConfig() {
+	return {
+		params: config.params,
+		loggingLevel: log.getLoggingLevel(),
+	};
+}
+
 router.get('/params/set', function(oReq, oRes) {
-	
-	if (oReq.query.sleepMilliseconds)
-		POFixDaemonInstance.setSleepMilliseconds(Number(oReq.query.sleepMilliseconds));
 
-    if (oReq.query.itemsByExecution)
-		config.params.itemsByExecution = Number(oReq.query.itemsByExecution);
+	try {
+		if (oReq.query.sleepMilliseconds)
+			POFixDaemonInstance.setSleepMilliseconds(Number(oReq.query.sleepMilliseconds));
 
-    if (oReq.query.itemsAdditionalFilters)
-		config.params.itemsAdditionalFilters = oReq.query.itemsAdditionalFilters;
+		if (oReq.query.itemsByExecution)
+			config.params.itemsByExecution = Number(oReq.query.itemsByExecution);
 
-	if (oReq.query.loggingLevel)
-		log.setLoggingLevel(oReq.query.loggingLevel);
+		if (oReq.query.itemsAdditionalFilters)
+			config.params.itemsAdditionalFilters = oReq.query.itemsAdditionalFilters;
 
-	oRes.send('Modified');
+		if (oReq.query.alternativePurchasingGroups)
+			config.params.alternativePurchasingGroups = JSON.parse(oReq.query.alternativePurchasingGroups);
+
+		if (oReq.query.loggingLevel)
+			log.setLoggingLevel(oReq.query.loggingLevel);
+
+		oRes.send(JSON.stringify(getConfig()));
+
+	} catch (error) {
+		oRes.send(error);
+	}
+
 
 });
 
 router.get('/params/get', function(oReq, oRes) {
 	
-	oRes.send(JSON.stringify({
-		sleepMilliseconds: POFixDaemonInstance.sleepMilliseconds,
-        itemsByExecution: config.params.itemsByExecution,
-        itemsAdditionalFilters: config.params.itemsAdditionalFilters,
-		loggingLevel: log.getLoggingLevel(),
-	}));
+	oRes.send(JSON.stringify(getConfig()));
 
 });
 

@@ -7,6 +7,25 @@ let API = class {
 		this.POODataPath = '/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV';
 	}
 
+	async getPOs(qs){
+
+		qs['$format'] = 'json';
+
+		var options = {
+		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrder`,
+		    qs: qs,
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true // Automatically parses the JSON string in the response
+		};
+		
+		let body = await rp(options);
+		
+		return body.d.results
+	}
+
 	async getPendingItems(top, filter){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
@@ -53,6 +72,11 @@ let API = class {
 		};
 
 	}
+
+	getUrlPO(PurchaseOrder){
+		return `${config.destination.s4hc.URL}${this.POODataPath}`+
+			`/A_PurchaseOrder('${PurchaseOrder}')`;
+	}
 	
 	getUrl(PurchaseOrder, PurchaseOrderItem){
 		return `${config.destination.s4hc.URL}${this.POODataPath}`+
@@ -93,6 +117,27 @@ let API = class {
 		    	YY1_PrecoLiqCorrigido_PDI: true,
 		    	NetPriceAmount: NetPriceAmount.toString(),
 		    },
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true,
+		    headers: {
+		    	'x-csrf-token': csrfTokenData.csrfToken,
+		    	'Cookie': csrfTokenData.setCookie,
+		    }
+		};
+
+		await rp(options);
+	}
+
+	async patchPO(PurchaseOrder, body){
+		let csrfTokenData = await this.getCsrfToken();
+		
+		var options = {
+			method: 'PATCH',
+		    uri: this.getUrlPO(PurchaseOrder),
+		    body: body,
 			auth: {
 				user: config.destination.s4hc.User,
 				pass: config.destination.s4hc.Password,
