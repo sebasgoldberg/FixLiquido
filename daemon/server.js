@@ -2,7 +2,6 @@
 "use strict";
 
 const destination = require('./lib/destination');
-destination.addThis('daemon_api');
 
 const express = require('express');
 const passport = require("passport");
@@ -34,7 +33,9 @@ app.use(
 const routes = require('./lib/routes');
 app.use('/', routes);
 
-const iPort = appEnv.isLocal ? 3000: appEnv.port;
+const iPort = appEnv.port ? appEnv.port : 3000;
 app.listen(iPort, function () {
     log.info(`Congrats, your producer app is listening on port ${iPort}!`);
 });
+
+destination.addThis('daemon_api');

@@ -28,7 +28,7 @@ class POFixDaemon extends Daemon{
 			try{
 				await item.fix()
 			}catch(e){
-				log.error(`Erro ao tentar corrigir o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}: ${e}`);
+				log.error(`Erro ao tentar corrigir o item ${item.data.PurchaseOrder} ${item.data.PurchaseOrderItem}: ${e}`);
 			}
 		}
 
