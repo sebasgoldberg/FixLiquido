@@ -2,10 +2,48 @@
   "welcomeFile": "AppRouterHome.html",
   "routes": [
     {
-    	"source": "^/daemon/(.*)$",
-        "target": "$1",
-		"destination": "daemon_api",
-		"scope": "$XSAPPNAME.Update"
-	}
-  ]
+      "source": "^/daemon/(exec/.*)$",
+      "target": "$1",
+      "destination": "daemon_api",
+      "scope": "$XSAPPNAME.Exec"
+    },
+    {
+      "source": "^/daemon/(config/get/.*)$",
+      "target": "$1",
+      "destination": "daemon_api",
+      "scope": "$XSAPPNAME.ConfigRead"
+    },
+    {
+      "source": "^/daemon/(config/set/.*)$",
+      "target": "$1",
+      "destination": "daemon_api",
+      "scope": "$XSAPPNAME.ConfigUpdate"
+    },
+    {
+      "source": "^/daemon/(trace/.*)$",
+      "target": "$1",
+      "destination": "daemon_api",
+      "scope": "$XSAPPNAME.Trace"
+    },
+    {
+      "source": "^/daemon/(analysis/.*)$",
+      "target": "$1",
+      "destination": "daemon_api",
+      "scope": "$XSAPPNAME.Analysis"
+    },
+    {
+      "source": "^/logout.html$",
+      "localDir": "./resources/",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/(.*)$",
+      "localDir": "resources",
+      "authenticationType": "xsuaa"
+    }
+  ],
+  "logout": {
+    "logoutEndpoint": "/logout",
+    "logoutPage": "/logout.html"
+  }
 }

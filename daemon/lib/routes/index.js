@@ -2,7 +2,7 @@ const router = require('express').Router();
 let POFixDaemonInstance = require('../pofix/instance');
 const log = require('../log');
 
-router.get('/start', function(oReq, oRes) {
+router.get('/exec/start', function(oReq, oRes) {
 	
 	POFixDaemonInstance.start();
 
@@ -10,7 +10,7 @@ router.get('/start', function(oReq, oRes) {
 
 });
 
-router.get('/stop', function(oReq, oRes) {
+router.get('/exec/stop', function(oReq, oRes) {
 	
 	// active = false;
 
@@ -22,7 +22,7 @@ router.get('/stop', function(oReq, oRes) {
 
 const config = require('../config');
 
-router.get('/config/reload', function(oReq, oRes) {
+router.get('/config/set/reload', function(oReq, oRes) {
 	
 	config.reload();
 
@@ -37,7 +37,7 @@ function getConfig() {
 	};
 }
 
-router.get('/params/set', function(oReq, oRes) {
+router.get('/config/set/params', function(oReq, oRes) {
 
 	try {
 		if (oReq.query.sleepMilliseconds)
@@ -64,7 +64,7 @@ router.get('/params/set', function(oReq, oRes) {
 
 });
 
-router.get('/params/get', function(oReq, oRes) {
+router.get('/config/get/params', function(oReq, oRes) {
 	
 	oRes.send(JSON.stringify(getConfig()));
 

@@ -2,13 +2,13 @@
   <body>
     <h1>Solução para Correção do Preço Liquido de Itens de Pedido</h1>
     <ul>
-      <li><a href="/daemon/start">Start</a>: Iniciar Daemon.</li>
-      <li><a href="/daemon/stop">Stop</a>: Parar Daemon.</li>
-      <li><a href="/daemon/params/get">Get Config</a>: Obtenção da configuração de execução atual.</li>
-      <li><a href="/daemon/params/set">Set Config</a>: Modificação da configuração atual (pasar novos valores como query parameters).</li>
-      <li><a href="/config/reload">Reload Config</a>: Faz um reload da configuração. Util em caso que tenha atualizado algum destination.</li>
-      <li><a href="/daemon/trace/add">Register Trace</a>: Registrar dados de trace. Pasar as informações do registro de trace no query parameter data.</li>
-      <li><a href="/daemon/analysis/last/state?filter=PurchaseOrder eq '4500000061'">Analysis</a>: Obtem uma lista com o análise por item para o filtro especificado no query parameter filter (exemplo: filter=PurchaseOrder eq '4500000061'). 
+      <li><a href="/daemon/exec/start" target="_blank">Start</a>: Iniciar Daemon.</li>
+      <li><a href="/daemon/exec/stop" target="_blank">Stop</a>: Parar Daemon.</li>
+      <li><a href="/daemon/config/get/params" target="_blank">Get Config</a>: Obtenção da configuração de execução atual.</li>
+      <li><a href="/daemon/config/set/params" target="_blank">Set Config</a>: Modificação da configuração atual (pasar novos valores como query parameters).</li>
+      <li><a href="/daemon/config/set/reload" target="_blank">Reload Config</a>: Faz um reload da configuração. Util em caso que tenha atualizado algum destination.</li>
+      <li><a href="/daemon/trace/add" target="_blank">Register Trace</a>: Registrar dados de trace. Pasar as informações do registro de trace no query parameter data.</li>
+      <li><a href="/daemon/analysis/last/state?filter=PurchaseOrder eq '4500000061'" target="_blank">Analysis</a>: Obtem uma lista com o análise por item para o filtro especificado no query parameter filter (exemplo: filter=PurchaseOrder eq '4500000061'). 
         Os dados por item são os seguintes:
         <ul>
           <li>data: Dados atuais do item.</li>
@@ -17,8 +17,12 @@
           <li>trace.responseBody: Resposta do calculo de impostos utilizando o trace.payloadRequest com o tipo modificado para gross.</li>
         </ul>
       </li>
-      <li><a href="/daemon/analysis/gross/calc/for/guid?GUID=FA163EC5B6871ED9BF81DAB49FADE7EC">Gross Calc for GUID</a>: Realiza o calculo de impostos utilizando o payload associado ao GUID, só que marca o importe enviado como bruto. </li>
-      
+      <li><a href="/daemon/analysis/gross/calc/for/guid?GUID=FA163EC5B6871ED9BF81DAB49FADE7EC" target="_blank">Gross Calc for GUID</a>: Realiza o calculo de impostos utilizando o payload associado ao GUID, só que marca o importe enviado como bruto. </li>
     </ul>
+
+    <ul>
+      <li><a href="/logout">Logout </li>
+    </ul>
+
   </body>
 </html>

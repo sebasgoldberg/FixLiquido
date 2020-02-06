@@ -4,12 +4,24 @@
 	"tenant-mode": "dedicated",
 	"scopes": [
 		{
-			"name": "$XSAPPNAME.Display",
-			"description": "Display Info."
+			"name": "$XSAPPNAME.Exec",
+			"description": "Operações de execução."
 		},
 		{
-			"name": "$XSAPPNAME.Update",
-			"description": "Update Info."
+			"name": "$XSAPPNAME.ConfigRead",
+			"description": "Leitura da configuração."
+		},
+		{
+			"name": "$XSAPPNAME.ConfigUpdate",
+			"description": "Atualização da configuração da configuração."
+		},
+		{
+			"name": "$XSAPPNAME.Trace",
+			"description": "Adição de registros de trace para teste."
+		},
+		{
+			"name": "$XSAPPNAME.Analysis",
+			"description": "Análise de calculo de preço liquido."
 		},
 		{
 			"name": "uaa.user",
@@ -18,18 +30,21 @@
 	],
 	"role-templates": [
 		{
-			"name": "Viewer",
-			"description": "View Info.",
+			"name": "Analyst",
+			"description": "Consigue ver a configuração de execução e realizar análise no cálculos de preço liquido.",
 			"scope-references": [
-				"$XSAPPNAME.Display"
+				"$XSAPPNAME.ConfigRead",
+				"$XSAPPNAME.Analysis"
 			]
 		},
 		{
-			"name": "Editor",
-			"description": "Maintain Info",
+			"name": "Manager",
+			"description": "Consegue ver e modificar a configuração, iniciar e detener a execução do daemon.",
 			"scope-references": [
-				"$XSAPPNAME.Display",
-				"$XSAPPNAME.Update"
+				"$XSAPPNAME.Exec",
+				"$XSAPPNAME.ConfigRead",
+				"$XSAPPNAME.ConfigUpdate",
+				"$XSAPPNAME.Trace"
 			]
 		},
 		{
