@@ -32,21 +32,10 @@ resources:
       path: ./xs-security.json
       service-plan: application
       service: xsuaa
-      config:
-        xsappname: spacetravel-uaa-${space}
-        tenant-mode: dedicated
-        scopes:
-          - name: uaa.user
-            description: UAA
-        role-templates:
-          - name: Token_Exchange
-            description: UAA
-            scope-references:
-              - uaa.user
     type: org.cloudfoundry.managed-service
   - name: dest_FixLiquido
     parameters:
       service-plan: lite
       service: destination
       service-name: dest_FixLiquido
-    type: org.cloudfoundry.existing-service
+    type: org.cloudfoundry.managed-service
