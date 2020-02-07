@@ -6,9 +6,13 @@
 	<Page
 		id="page"
 		title="{i18n>title}">
-		<content>
-			<Button text="Start" press="onStart" />
-			<Button text="Stop" press="onStop" />
-		</content>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button type="Accept" text="Start" press="onStart" />
+				<Button type="Reject" text="Stop" press="onStop" />
+			</OverflowToolbar>
+		</footer>
+
 	</Page>
 </mvc:View>
