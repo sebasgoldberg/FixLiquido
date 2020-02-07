@@ -37,8 +37,19 @@
       "authenticationType": "none"
     },
     {
+      "source": "^/resources/custom/libs/external/polyfill/(.*)$",
+      "target": "$1",
+      "localDir": "resources/ui5/node_modules/ui5-babel-polyfills/dist",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^(/resources/.*)$",
+      "target": "$1",
+      "destination": "ui5"
+    },
+    {
       "source": "^/(.*)$",
-      "localDir": "resources",
+      "localDir": "resources/ui5/dist",
       "authenticationType": "xsuaa"
     }
   ],

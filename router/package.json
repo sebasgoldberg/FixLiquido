@@ -1,6 +1,7 @@
 {
   "name": "myapprouter",
   "scripts": {
+    "preinstall": "cd resources/ui5/ && npm i",
     "start": "nodemon node_modules/@sap/approuter/approuter.js"
   },
   "dependencies": {

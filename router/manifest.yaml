@@ -8,3 +8,8 @@ applications:
     - uaa_FixLiquido
     - dest_FixLiquido
     - logsFixLiquido
+  env: 
+    destinations: > 
+       [
+        {"name":"ui5", "url":"https://sapui5.hana.ondemand.com"} 
+       ]
