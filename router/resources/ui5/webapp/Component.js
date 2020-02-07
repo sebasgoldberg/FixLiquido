@@ -2,7 +2,7 @@ import UIComponent from "sap/ui/core/UIComponent";
 import Device from "sap/ui/Device";
 import models from "./model/models";
 
-export default UIComponent.extend("sap.ui.demo.basicTemplate.Component", {
+export default UIComponent.extend("jsg.fixpo.Component", {
 
 	metadata: {
 		manifest: "json"

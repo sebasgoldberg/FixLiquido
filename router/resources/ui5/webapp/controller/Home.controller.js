@@ -4,7 +4,7 @@ sap.ui.define([
 ], function(Controller, formatter) {
 	"use strict";
 
-	return Controller.extend("sap.ui.demo.basicTemplate.controller.App", {
+	return Controller.extend("jsg.fixpo.controller.App", {
 
 		formatter: formatter,
 

@@ -7,7 +7,7 @@ sap.ui.define([
 
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "sap.ui.demo.basicTemplate.view.",
+		viewNamespace: "jsg.fixpo.view.",
 		autoWait: true
 	});
 });

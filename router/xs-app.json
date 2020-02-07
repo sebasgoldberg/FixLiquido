@@ -1,5 +1,5 @@
 {
-  "welcomeFile": "index.html",
+  "welcomeFile": "/dist/",
   "routes": [
     {
       "source": "^/daemon/(exec/.*)$",
@@ -48,9 +48,17 @@
       "destination": "ui5"
     },
     {
-      "source": "^/(.*)$",
+      "source": "^/dist/(.*)$",
+      "target": "$1",
       "localDir": "resources/ui5/dist",
       "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/transp/(.*)$",
+      "target": "$1",
+      "localDir": "resources/ui5/transp",
+      "authenticationType": "xsuaa",
+      "scope": "$XSAPPNAME.Analysis"
     }
   ],
   "logout": {
