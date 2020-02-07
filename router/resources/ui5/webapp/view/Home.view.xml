@@ -6,6 +6,9 @@
 	<Page
 		id="page"
 		title="{i18n>title}">
-		<content></content>
+		<content>
+			<Button text="Start" press="onStart" />
+			<Button text="Stop" press="onStop" />
+		</content>
 	</Page>
 </mvc:View>
