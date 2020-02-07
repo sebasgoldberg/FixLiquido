@@ -1,5 +1,5 @@
 {
-  "welcomeFile": "AppRouterHome.html",
+  "welcomeFile": "index.html",
   "routes": [
     {
       "source": "^/daemon/(exec/.*)$",
