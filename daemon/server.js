@@ -1,7 +1,7 @@
 /*eslint no-console: 0*/
 "use strict";
 
-const destination = require('./lib/destination');
+const Destination = require('./lib/destination');
 
 const express = require('express');
 const passport = require("passport");
@@ -44,4 +44,5 @@ app.listen(iPort, function () {
     log.debug(`App iniciada na porta ${iPort}!`);
 });
 
+let destination = new Destination();
 destination.addThis('daemon_api');

@@ -1,5 +1,4 @@
-var destination = require("../destination");
-const destinationService = "dest_FixLiquido";
+var Destination = require("../destination");
 const log = require('../log');
 
 class Config{
@@ -17,11 +16,13 @@ class Config{
 
 		this.destination = {};
 
+		let destination = new Destination();
+
 		try{
 			[this.destination.s4hc, this.destination.taxService] = await Promise.all([
-				destination.getDestination(destinationService, "s4hc"), 
+				destination.getDestination("s4hc"), 
 				// @todo Mudar para taxService
-				destination.getDestination(destinationService, "taxServiceToken")]
+				destination.getDestination("taxServiceToken")]
 				);
 		}catch(e){
 			log.error(`Error when retrieving destinations: ${JSON.stringify(e)}`);
