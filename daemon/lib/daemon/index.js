@@ -4,7 +4,7 @@ module.exports = class {
 
 	constructor(){
 		this.active = false;
-		this.sleepMilliseconds = 10*1000;
+		this.sleepMilliseconds = 10000;
 		this.running = false;
 	}
 

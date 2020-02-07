@@ -14,7 +14,7 @@ module.exports = class Trace{
 		try{
 			traceLog = await TaxService.getLogFromGUID(this.data.GUID);
 		}catch(e){
-			log.error("Erro ao tentar obter o log trace de calculo de impostos para o GUID.");
+			log.error(`Erro ao tentar obter o log trace de calculo de impostos para o GUID ${this.data.GUID}.`);
 			throw e;
 		}
 

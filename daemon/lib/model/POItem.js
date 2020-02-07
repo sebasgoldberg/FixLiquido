@@ -27,7 +27,7 @@ module.exports = class{
 		try{
 			return await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem, select);
 		}catch(e){
-			log.error("Erro ao tentar obter a ultima correção do item do histórico.");
+			log.error(`Erro ao tentar obter a ultima correção do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} do histórico.`);
 			throw e;
 		}
 	}
@@ -52,7 +52,7 @@ module.exports = class{
 		try{
 			await POAPI.setItemAsFixed(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
 		}catch(e){
-			log.error("Erro ao tentar marcar o item como corrigido.");
+			log.error(`Erro ao tentar marcar o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} como corrigido.`);
 			throw e;
 		}
 	}
@@ -64,7 +64,7 @@ module.exports = class{
 		try{
 			traceData = await TraceAPI.getLastTrace(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
 		}catch(e){
-			log.error("Erro ao tentar obter o ultimo trace do item.");
+			log.error(`Erro ao tentar obter o ultimo trace do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;
 		}
 

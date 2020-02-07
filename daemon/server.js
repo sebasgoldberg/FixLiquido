@@ -12,6 +12,12 @@ const appEnv = cfenv.getAppEnv();
 
 const log = require('./lib/log');
 
+log.setLoggingLevel('debug');
+
+log.setSinkFunction(function(level, output) {
+	console[level](output);
+});
+
 var app = express();
 
 //Build a JWT Strategy from the bound UAA resource
@@ -35,7 +41,7 @@ app.use('/', routes);
 
 const iPort = appEnv.port ? appEnv.port : 3000;
 app.listen(iPort, function () {
-    log.info(`Congrats, your producer app is listening on port ${iPort}!`);
+    log.debug(`App iniciada na porta ${iPort}!`);
 });
 
 destination.addThis('daemon_api');

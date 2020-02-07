@@ -31,7 +31,7 @@ describe(`_runOneExecution`, () => {
 
     it("should not finish until the fix PO process finish.", async done => {
 
-		log.info = sinon.fake();
+		log.debug = sinon.fake();
 
 		let daemon = new Daemon();
 
@@ -43,18 +43,18 @@ describe(`_runOneExecution`, () => {
 		expect(daemon.fixPOs.calledOnce).toBe(true);
 		expect(daemon.fixPOs.calledOn(daemon)).toBe(true);
 
-        expect(log.info.calledOnce).toBe(true);
-        expect(log.info.calledWith('Execução iniciada.')).toBe(true);
+        expect(log.debug.calledOnce).toBe(true);
+        expect(log.debug.calledWith('Execução iniciada.')).toBe(true);
 
 		await sinon.clock.tickAsync(500);
 
-        expect(log.info.calledOnce).toBe(true);
-        expect(log.info.calledWith('Execução finalizada.')).toBe(false);
+        expect(log.debug.calledOnce).toBe(true);
+        expect(log.debug.calledWith('Execução finalizada.')).toBe(false);
 
 		await sinon.clock.tickAsync(500);
 
-        expect(log.info.calledTwice).toBe(true);
-        expect(log.info.calledWith('Execução finalizada.')).toBe(true);
+        expect(log.debug.calledTwice).toBe(true);
+        expect(log.debug.calledWith('Execução finalizada.')).toBe(true);
 
         done();
     });
@@ -210,10 +210,8 @@ describe(`gerarWorkflowPOs`, () => {
         await daemon.gerarWorkflowPOs();
         
         expect(log.error.calledTwice).toBe(true);
-        expect(log.error.getCall(0).args[0]).toEqual(
-            `Erro ao tentar modificar o grupo de compradores do PO P0: ${errors[0].toString()}`);
-        expect(log.error.getCall(1).args[0]).toEqual(
-            `Erro ao tentar modificar o grupo de compradores do PO P1: ${errors[0].toString()}`);
+        expect(log.error.getCall(0).args[0]).toEqual(`Erro ao tentar modificar o grupo de compradores da PO P0: ${errors[0].toString()}`);
+        expect(log.error.getCall(1).args[0]).toEqual(`Erro ao tentar modificar o grupo de compradores da PO P1: ${errors[0].toString()}`);
         
         done();
     });

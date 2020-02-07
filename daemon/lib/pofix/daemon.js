@@ -32,7 +32,7 @@ class POFixDaemon extends Daemon{
 			try{
 				await item.fix()
 			}catch(e){
-				log.error(`Erro ao tentar corrigir o item ${item.data.PurchaseOrder} ${item.data.PurchaseOrderItem}: ${e}`);
+				log.error(`Erro ao tentar processar o item ${item.data.PurchaseOrder} ${item.data.PurchaseOrderItem}: ${e}`);
 			}
 		}
 
@@ -94,21 +94,21 @@ class POFixDaemon extends Daemon{
 			try{
 				await po.setOriginalPurchasingGroup()
 			}catch(e){
-				log.error(`Erro ao tentar modificar o grupo de compradores do PO ${po.data.PurchaseOrder}: ${e}`);
+				log.error(`Erro ao tentar modificar o grupo de compradores da PO ${po.data.PurchaseOrder}: ${e}`);
 			}
 		}
 
 	}
 
 	async _runOneExecution(){
-		log.info('Execução iniciada.');
+		log.debug('Execução iniciada.');
 		try{
 			await this.fixPOs();
 			await this.gerarWorkflowPOs();
 		} catch(e){
-			log.error(e);
+			log.error(`Erro não esperado: ${JSON.stringify(e)}`);
 		}
-		log.info('Execução finalizada.');
+		log.debug('Execução finalizada.');
 	}
 
 }
