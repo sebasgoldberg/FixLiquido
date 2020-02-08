@@ -51,8 +51,8 @@ router.get('/config/set/params', function(oReq, oRes) {
 		if (oReq.query.itemsAdditionalFilters)
 			config.params.itemsAdditionalFilters = oReq.query.itemsAdditionalFilters;
 
-		if (oReq.query.alternativePurchasingGroups)
-			config.params.alternativePurchasingGroups = JSON.parse(oReq.query.alternativePurchasingGroups);
+		if (oReq.query.POAdditionalFilters)
+			config.params.POAdditionalFilters = oReq.query.POAdditionalFilters;
 
 		if (oReq.query.loggingLevel)
 			log.setLoggingLevel(oReq.query.loggingLevel);

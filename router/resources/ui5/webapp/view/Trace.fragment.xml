@@ -27,7 +27,7 @@
                     text="Dados de Trace" 
                     tooltip="São os registros obtidos na App de trace fazendo o download ao clipboard e deixando só as linhas com os dados."
                     />
-				<TextArea value="" growing="true" width="100%"/>
+				<TextArea value="{view>/traceData}" growing="true" width="100%"/>
 
 				<Label 
                     text="" 

@@ -20,7 +20,8 @@
 			columnsXL="1"
 			columnsL="1"
 			columnsM="1"
-			singleContainerFullSize="false" >
+			singleContainerFullSize="false" 
+			id="formConfig">
 			<f:content>
 
 				<Label 
@@ -53,15 +54,15 @@
 				<Input value="{config>/POAdditionalFilters}" />
 
 				<Label 
-                    text="" 
+                    text=""
                     />
-                <Button press="" text="Salvar" type="Emphasized"/>
+                <Button press="onSalvarConfig" text="Salvar" type="Emphasized"/>
 
 				<Label 
                     text="" 
                     />
                 <Button 
-                    press="" 
+                    press="onRecarregarConfig" 
                     text="Recarregar" 
                     tooltip="Recarrega a configuração no server. Últil quando é modificado algum destination ou alguma configuração no S/4." 
                     />
