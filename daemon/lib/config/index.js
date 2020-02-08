@@ -1,5 +1,6 @@
 var Destination = require("../destination");
 const log = require('../log');
+const PurchGroupAPI = require('../api/purch-group-map');
 
 class Config{
 
@@ -8,7 +9,6 @@ class Config{
 		this.params = {
 			itemsByExecution: 0,
 			itemsAdditionalFilters: '',
-			alternativePurchasingGroups: { 101: '001' },
 		};
 	}
 	
@@ -25,7 +25,24 @@ class Config{
 				destination.getDestination("taxServiceToken")]
 				);
 		}catch(e){
-			log.error(`Error when retrieving destinations: ${JSON.stringify(e)}`);
+			log.error(`Erro ao tentar obter os destinations: ${JSON.stringify(e)}`);
+		}
+
+		this.params.alternativePurchasingGroups = {};
+
+		try {
+
+			let purchasingGroupsMap = await PurchGroupAPI.get({
+				"$select": "GrupoCompraUsuario,GrupoCompraInterno"
+			}, this.destination.s4hc);
+
+			for (let purchasingGroupMap of purchasingGroupsMap){
+				this.params.alternativePurchasingGroups[purchasingGroupMap.GrupoCompraUsuario] = 
+					purchasingGroupMap.GrupoCompraInterno;
+			}
+
+		} catch (error) {
+			log.error(`Erro ao tentar obter o mapeamento de grupo de compradores: ${JSON.stringify(e)}`);
 		}
 
 	}
