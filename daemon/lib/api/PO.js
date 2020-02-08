@@ -31,7 +31,7 @@ let API = class {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
 		    	'$format': 'json',
-		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount',
+		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount,YY1_PrecoLiqCorrigido_PDI',
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
