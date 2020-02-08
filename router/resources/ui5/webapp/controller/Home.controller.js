@@ -161,5 +161,23 @@ sap.ui.define([
 			this.openUrl(`/daemon/analysis/gross/calc/for/guid?GUID=${oViewData.guidSimulacao}`);
 		},
 
+		onRegistrarTrace: async function(oEvent) {
+			let oViewData = this.getView().getModel('view').getData();
+			let requestPromises = oViewData.traceData
+				.split('\n')
+				.filter(reg => reg)
+				.map(reg => this.getRequestPromise('/daemon/trace/add', { data: reg }));
+			try {
+				this.getView().setBusy(true);
+				await Promise.all(requestPromises);
+				sap.m.MessageToast.show('Registro de informações de trace enviado.');
+			} catch (error) {
+				console.error(error);
+				this.showError(JSON.stringify(error));
+			} finally {
+				this.getView().setBusy(false);
+			}
+		}
+
 	});
 });

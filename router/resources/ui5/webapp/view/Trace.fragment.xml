@@ -32,7 +32,7 @@
 				<Label 
                     text="" 
                     />
-                <Button press="" text="Salvar" type="Emphasized"/>
+                <Button press="onRegistrarTrace" text="Salvar" type="Emphasized"/>
 
 			</f:content>
 		</f:SimpleForm>

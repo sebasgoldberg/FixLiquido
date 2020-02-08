@@ -23,12 +23,10 @@ module.exports = {
             TimeStamp = SAPTimeStampToJSDate(TimeStamp)
             await Trace.addItem(GUID, CompanyCode, Application, DocumentCategory,
                 DocumentNumber, FiscalYear, ItemNumber, TimeStamp);
-            response = 'OK'
+            oRes.send(JSON.stringify('OK'));
         }catch(e){
-            response = e;
+            oRes.status(500).send(`Aconteceu um erro inesperado!: ${e}`);
         }
-        
-        oRes.send(JSON.stringify(response));
     
     }
 }
