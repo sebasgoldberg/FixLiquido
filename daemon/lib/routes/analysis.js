@@ -26,7 +26,7 @@ async function getGrossCalcForGUID(GUID){
 
 async function getLastState(filter) {
 
-    let pendingItemsData = await POAPI.getPendingItems(100, filter);
+    let pendingItemsData = await POAPI.getPendingItems(filter);
     let pendingItems = pendingItemsData.map( data => new Item(data) );
 
     let result = [];

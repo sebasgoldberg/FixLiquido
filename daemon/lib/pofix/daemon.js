@@ -20,7 +20,7 @@ class POFixDaemon extends Daemon{
 		if (config.params.itemsAdditionalFilters)
 			filter += ` and ( ${config.params.itemsAdditionalFilters} )`;
 
-		let pendingItemsData = await POAPI.getPendingItems(config.params.itemsByExecution, filter);
+		let pendingItemsData = await POAPI.getPendingItems(filter);
 		let pendingItems = pendingItemsData.map( data => new Item(data) );
 
 		// @todo Promise.all(pendingItems.map(async ...)) em caso de querer executar

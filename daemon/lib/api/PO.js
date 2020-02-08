@@ -26,7 +26,7 @@ let API = class {
 		return body.d.results
 	}
 
-	async getPendingItems(top, filter){
+	async getPendingItems(filter){
 		var options = {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
@@ -39,9 +39,6 @@ let API = class {
 			},
 		    json: true // Automatically parses the JSON string in the response
 		};
-		
-		if (top)
-			options.qs['$top'] = top;
 		
 		if (filter)
 			options.qs['$filter'] = filter;

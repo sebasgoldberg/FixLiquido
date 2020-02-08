@@ -31,10 +31,15 @@ router.get('/config/set/reload', function(oReq, oRes) {
 });
 
 function getConfig() {
-	return {
-		params: config.params,
+
+	let result = {
 		loggingLevel: log.getLoggingLevel(),
+		sleepMilliseconds: POFixDaemonInstance.sleepMilliseconds,
 	};
+
+	Object.assign(result, config.params)
+
+	return result;
 }
 
 router.get('/config/set/params', function(oReq, oRes) {
@@ -42,9 +47,6 @@ router.get('/config/set/params', function(oReq, oRes) {
 	try {
 		if (oReq.query.sleepMilliseconds)
 			POFixDaemonInstance.setSleepMilliseconds(Number(oReq.query.sleepMilliseconds));
-
-		if (oReq.query.itemsByExecution)
-			config.params.itemsByExecution = Number(oReq.query.itemsByExecution);
 
 		if (oReq.query.itemsAdditionalFilters)
 			config.params.itemsAdditionalFilters = oReq.query.itemsAdditionalFilters;
