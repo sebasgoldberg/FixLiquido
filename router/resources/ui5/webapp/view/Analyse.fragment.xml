@@ -32,7 +32,7 @@
 				<Label 
                     text="" 
                     />
-                <Button press="" text="Analisar" type="Emphasized"/>
+                <Button press="onAnalisarPedido" text="Analisar" type="Emphasized"/>
 
 			</f:content>
 		</f:SimpleForm>
@@ -66,7 +66,7 @@
 				<Label 
                     text="" 
                     />
-                <Button press="" text="Simular" type="Emphasized"/>
+                <Button press="onSimularGuid" text="Simular" type="Emphasized"/>
 
 			</f:content>
 		</f:SimpleForm>

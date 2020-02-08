@@ -147,5 +147,19 @@ sap.ui.define([
 				
 		},
 
+		openUrl: function(path) {
+			window.open(`${window.location.origin}${path}`, '_blank');
+		},
+
+		onAnalisarPedido: function (oEvent) {
+			let oViewData = this.getView().getModel('view').getData();
+			this.openUrl(`/daemon/analysis/last/state?filter=PurchaseOrder eq '${oViewData.pedidoAnalisar}'`);
+		},
+
+		onSimularGuid: function (oEvent) {
+			let oViewData = this.getView().getModel('view').getData();
+			this.openUrl(`/daemon/analysis/gross/calc/for/guid?GUID=${oViewData.guidSimulacao}`);
+		},
+
 	});
 });
