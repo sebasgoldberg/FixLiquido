@@ -1,6 +1,8 @@
 var Destination = require("../destination");
 const log = require('../log');
 const PurchGroupAPI = require('../api/purch-group-map');
+const FixPoUserAPI = require('../api/fix-po-user.js');
+
 
 class Config{
 
@@ -13,6 +15,8 @@ class Config{
 	}
 	
 	async reload(){
+
+		// Obtenção dos destinations.
 
 		this.destination = {};
 
@@ -28,6 +32,19 @@ class Config{
 			log.error(`Erro ao tentar obter os destinations: ${JSON.stringify(e)}`);
 		}
 
+		// Registro do usuario que está executando o processo.
+		try {
+
+			await FixPoUserAPI.post({
+				Usuario: this.destination.s4hc.User
+			}, this.destination.s4hc);
+
+		} catch (e) {
+			log.error(`Erro ao tentar registrar o usuario API do processo que realiza a correção de pedidos: ${JSON.stringify(e)}`);
+		}
+
+		// Obtenção dos grupos de compradores alternativos.
+
 		this.params.alternativePurchasingGroups = {};
 
 		try {
@@ -41,7 +58,7 @@ class Config{
 					purchasingGroupMap.GrupoCompraInterno;
 			}
 
-		} catch (error) {
+		} catch (e) {
 			log.error(`Erro ao tentar obter o mapeamento de grupo de compradores: ${JSON.stringify(e)}`);
 		}
 
