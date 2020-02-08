@@ -1,0 +1,72 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<VBox class="sapUiSmallMargin">
+		<f:SimpleForm
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="Configuração de Execução"
+			labelSpanXL="3"
+			labelSpanL="3"
+			labelSpanM="3"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="4"
+			emptySpanL="4"
+			emptySpanM="4"
+			emptySpanS="0"
+			columnsXL="1"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false" >
+			<f:content>
+
+				<Label 
+                    text="Log level" 
+                    tooltip="Nivel minimo dos mensagens a considerar no log."
+                    />
+                <ComboBox selectedKey="{config>/loggingLevel}">
+                    <core:Item key="debug" text="Debug" />
+                    <core:Item key="info" text="Informação" />
+                    <core:Item key="warn" text="Advertência" />
+                    <core:Item key="error" text="Erro" />
+                </ComboBox>
+
+				<Label 
+                    text="Sleep (milisegundos)"
+                    tooltip="Tempo de espera em milisegundo entre uma execução e outra."
+                    />
+				<Input value="{config>/sleepMilliseconds}" />
+
+				<Label 
+                    text="Filtros na Seleção de Itens (OData)"
+                    tooltip="Aplica na seleção de itens a serem corrigidos. Deverá ser utilizada sintaxis OData para o parametro $filter."
+                    />
+				<Input value="{config>/itemsAdditionalFilters}" />
+
+				<Label 
+                    text="Filtros na Seleção de Pedidos (OData)" 
+                    tooltip="Aplica na seleção de pedidos já corrigidos onde será modificado o grupo de compradores. Deverá ser utilizada sintaxis OData para o parametro $filter."
+                    />
+				<Input value="{config>/POAdditionalFilters}" />
+
+				<Label 
+                    text="" 
+                    />
+                <Button press="" text="Salvar" type="Emphasized"/>
+
+				<Label 
+                    text="" 
+                    />
+                <Button 
+                    press="" 
+                    text="Recarregar" 
+                    tooltip="Recarrega a configuração no server. Últil quando é modificado algum destination ou alguma configuração no S/4." 
+                    />
+
+			</f:content>
+		</f:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>

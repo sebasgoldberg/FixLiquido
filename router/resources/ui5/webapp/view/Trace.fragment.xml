@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<VBox class="sapUiSmallMargin">
+		<f:SimpleForm
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="Adição de Trace Para Teste"
+			labelSpanXL="3"
+			labelSpanL="3"
+			labelSpanM="3"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="4"
+			emptySpanL="4"
+			emptySpanM="4"
+			emptySpanS="0"
+			columnsXL="1"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false" >
+			<f:content>
+
+				<Label 
+                    text="Dados de Trace" 
+                    tooltip="São os registros obtidos na App de trace fazendo o download ao clipboard e deixando só as linhas com os dados."
+                    />
+				<TextArea value="" growing="true" width="100%"/>
+
+				<Label 
+                    text="" 
+                    />
+                <Button press="" text="Salvar" type="Emphasized"/>
+
+			</f:content>
+		</f:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>
