@@ -9,6 +9,7 @@
 		title="{i18n>title}"
 		showHeader="true">
 
+		<core:Fragment fragmentName="jsg.fixpo.view.Status" type="XML" />
 		<core:Fragment fragmentName="jsg.fixpo.view.Config" type="XML" />
 		<core:Fragment fragmentName="jsg.fixpo.view.Analyse" type="XML" />
 		<core:Fragment fragmentName="jsg.fixpo.view.Trace" type="XML" />

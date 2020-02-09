@@ -1,0 +1,56 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	xmlns:mc="sap.suite.ui.microchart">
+	<VBox class="sapUiSmallMargin">
+		<f:SimpleForm
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="Status Correções"
+			labelSpanXL="3"
+			labelSpanL="3"
+			labelSpanM="12"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="4"
+			emptySpanL="4"
+			emptySpanM="3"
+			emptySpanS="0"
+			columnsXL="1"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false"
+			>
+			<f:content>
+
+				<Label 
+                    text="" 
+                    tooltip=""
+                    />
+				<FlexBox width="27rem" height="8rem" alignItems="left" justifyContent="SpaceBetween">
+					<items>
+						<mc:InteractiveDonutChart selectionChanged="onSelectionChanged">
+							<mc:segments>
+								<mc:InteractiveDonutChartSegment label="100 pedidos pendentes" value="33.33" displayedValue="33.33%" color="Error"/>
+								<mc:InteractiveDonutChartSegment label="200 pedidos corrigidos" value="66.67" displayedValue="66.67%" color="Good"/>
+							</mc:segments>
+						</mc:InteractiveDonutChart>
+					</items>
+				</FlexBox>
+
+				<Label 
+                    text="" 
+                    />
+                <Button 
+                    press="onAtualizarStatus" 
+                    text="Atualizar" 
+                    tooltip="" 
+					type="Emphasized"
+                    />
+
+			</f:content>
+		</f:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>
