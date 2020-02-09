@@ -31,7 +31,7 @@ module.exports = class{
 
 		quoteResponseBody.taxLines.forEach( taxLine => {
 			taxLine.taxValues.forEach( taxValue => {
-		        if (taxTypeCodes.includes(taxValue.taxTypeCode)){
+		        if (taxValue.value && taxTypeCodes.includes(taxValue.taxTypeCode)){
 		            let tax = parseFloat(taxValue.value);
 		            net_value = net_value - tax; 
 		        }
