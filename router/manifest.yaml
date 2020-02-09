@@ -1,6 +1,7 @@
 ---
 applications:
 - name: router
+  buildpack: nodejs_buildpack
   random-route: true
   path: .
   memory: 256M

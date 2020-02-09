@@ -14,13 +14,6 @@
     "postinstall": "node ./node_modules/grunt-cli/bin/grunt transp && node ./node_modules/@ui5/cli/bin/ui5.js build"
   },
   "dependencies": {
-    "@openui5/sap.m": "~1.60.13",
-    "@openui5/sap.ui.core": "~1.60.13",
-    "@openui5/sap.ui.layout": "~1.60.13",
-    "@openui5/themelib_sap_belize": "~1.60.13",
-    "ui5-babel-polyfills": "^0.1.1"
-  },
-  "devDependencies": {
     "@babel/core": "^7.5.0",
     "@babel/preset-env": "^7.5.0",
     "@ui5/cli": "^1.13.1",
@@ -34,6 +27,9 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^22.0.0",
     "grunt-exec": "^3.0.0",
+    "ui5-babel-polyfills": "^0.1.1"
+  },
+  "devDependencies": {
     "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",

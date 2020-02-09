@@ -75,7 +75,7 @@ module.exports = function(grunt) {
     if (process.platform === "win32")
         grunt.registerTask("transp", ["clean:transp", "babel", "copy:webapp"])
     else
-        grunt.registerTask("transp", ["clean:transp", "babel", "copy:webapp", "exec:i18n_conv"]);
+        grunt.registerTask("transp", ["clean:transp", "babel", "copy:webapp"]);
 
     // Default task
     grunt.registerTask("default", [
