@@ -149,6 +149,23 @@ let API = class {
 		await rp(options);
 	}
 
+	async countItems(qs = {}){
+
+		let options = {
+		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem/$count`,
+		    qs: qs,
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true // Automatically parses the JSON string in the response
+		};
+
+		let body = await rp(options);
+		
+		return Number(body);
+	}
+
 }
 
 module.exports = new API();

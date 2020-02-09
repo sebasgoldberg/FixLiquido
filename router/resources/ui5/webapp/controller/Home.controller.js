@@ -16,18 +16,26 @@ sap.ui.define([
 		onInit: async function () {
 			let v = this.getView();
 
-			let oConfigModel = new JSONModel({});
-			v.setModel(oConfigModel,"config");
-			v.byId('formConfig')
-
-			await this.refreshConfig()
-
 			let oViewModel = new JSONModel({
 				pedidoAnalisar: '',
 				guidSimulacao: '',
 				traceData: '',
 			});
 			v.setModel(oViewModel,"view");
+
+			v.setModel(new JSONModel({}),"config");
+
+			v.setModel(new JSONModel({}),"metrics");
+
+			try {
+				await Promise.all([
+					this.refreshConfig(),
+					this.refreshMetrics(),
+				]);
+			} catch (error) {
+				console.error(error);
+				this.showError(`Erro ao tentar carregar as informações de inicialização: ${JSON.stringify(error)}`);
+			}
 
 		},
 
@@ -100,14 +108,26 @@ sap.ui.define([
 		},
 
 		refreshConfig: async function() {
-			try {
-				let v = this.getView();
-				let config = await this.getConfig();
-				let m = v.getModel('config');
-				m.setData(config);
-			} catch (e) {
-			} finally {
-			}
+			let v = this.getView();
+			let config = await this.getConfig();
+			let m = v.getModel('config');
+			m.setData(config);
+		},
+
+		getMetrics: async function(){
+			return JSON.parse(await this.execGetRequest("/daemon/metrics/"));
+		},
+
+		refreshMetrics: async function() {
+			let v = this.getView();
+			let metrics = await this.getMetrics();
+
+			metrics.pendentes = metrics.total - metrics.corrigidos;
+			metrics.porcentualPendentes = Number((metrics.pendentes * 100 / metrics.total).toFixed(2))
+			metrics.porcentualCorrigidos = 100 - metrics.porcentualPendentes;
+
+			let m = v.getModel('metrics');
+			m.setData(metrics);
 		},
 
 		onSalvarConfig: async function (oEvent) {

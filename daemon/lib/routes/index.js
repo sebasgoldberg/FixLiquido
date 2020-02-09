@@ -82,4 +82,8 @@ router.get('/analysis/last/state', analysis.lastState );
 
 router.get('/analysis/gross/calc/for/guid', analysis.grossCalcForGUID );
 
+const metrics = require('../routes/metrics')
+
+router.get('/metrics/', metrics.get );
+
 module.exports = router;

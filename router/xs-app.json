@@ -32,6 +32,12 @@
       "scope": "$XSAPPNAME.Analysis"
     },
     {
+      "source": "^/daemon/(metrics/.*)$",
+      "target": "$1",
+      "destination": "daemon_api",
+      "scope": "$XSAPPNAME.Analysis"
+    },
+    {
       "source": "^/logout.html$",
       "localDir": "./resources/",
       "authenticationType": "none"

@@ -8,7 +8,7 @@
 		<f:SimpleForm
 			editable="true"
 			layout="ResponsiveGridLayout"
-			title="Status Correções"
+			title="Metricas Correções"
 			labelSpanXL="3"
 			labelSpanL="3"
 			labelSpanM="12"
@@ -33,8 +33,17 @@
 					<items>
 						<mc:InteractiveDonutChart selectionChanged="onSelectionChanged">
 							<mc:segments>
-								<mc:InteractiveDonutChartSegment label="100 pedidos pendentes" value="33.33" displayedValue="33.33%" color="Error"/>
-								<mc:InteractiveDonutChartSegment label="200 pedidos corrigidos" value="66.67" displayedValue="66.67%" color="Good"/>
+								<mc:InteractiveDonutChartSegment
+									label="{metrics>/corrigidos} pedidos corrigidos" 
+									value="{metrics>/porcentualCorrigidos}" 
+									displayedValue="{metrics>/porcentualCorrigidos}%" 
+									color="Good"/>
+								<mc:InteractiveDonutChartSegment 
+									label="{metrics>/pendentes} pedidos pendentes" 
+									value="{metrics>/porcentualPendentes}" 
+									displayedValue="{metrics>/porcentualPendentes}%" 
+									color="Error"
+									/>
 							</mc:segments>
 						</mc:InteractiveDonutChart>
 					</items>
