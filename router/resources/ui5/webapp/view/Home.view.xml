@@ -18,7 +18,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer/>
 				<Button type="Accept" text="Iniciar" press="onStart" />
-				<Button type="Reject" text="Para" press="onStop" />
+				<Button type="Reject" text="Parar" press="onStop" />
 			</OverflowToolbar>
 		</footer>
 
