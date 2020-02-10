@@ -16,7 +16,7 @@
 			adjustLabelSpan="false"
 			emptySpanXL="4"
 			emptySpanL="4"
-			emptySpanM="3"
+			emptySpanM="4"
 			emptySpanS="0"
 			columnsXL="1"
 			columnsL="1"
@@ -29,17 +29,17 @@
                     text="" 
                     tooltip=""
                     />
-				<FlexBox width="27rem" height="8rem" alignItems="left" justifyContent="SpaceBetween">
+				<FlexBox width="23rem" height="8rem" alignItems="left" justifyContent="SpaceBetween">
 					<items>
 						<mc:InteractiveDonutChart selectionChanged="onSelectionChanged">
 							<mc:segments>
 								<mc:InteractiveDonutChartSegment
-									label="{metrics>/corrigidos} pedidos corrigidos" 
+									label="{metrics>/corrigidos} corrigidos" 
 									value="{metrics>/porcentualCorrigidos}" 
 									displayedValue="{metrics>/porcentualCorrigidos}%" 
 									color="Good"/>
 								<mc:InteractiveDonutChartSegment 
-									label="{metrics>/pendentes} pedidos pendentes" 
+									label="{metrics>/pendentes} pendentes" 
 									value="{metrics>/porcentualPendentes}" 
 									displayedValue="{metrics>/porcentualPendentes}%" 
 									color="Error"
@@ -53,7 +53,7 @@
                     text="" 
                     />
                 <Button 
-                    press="onAtualizarStatus" 
+                    press="onAtualizarMetricas" 
                     text="Atualizar" 
                     tooltip="" 
 					type="Emphasized"

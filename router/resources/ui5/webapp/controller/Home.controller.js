@@ -130,6 +130,19 @@ sap.ui.define([
 			m.setData(metrics);
 		},
 
+		onAtualizarMetricas: async function(oEvent){
+			try {
+				this.getView().setBusy(true);
+				await this.refreshMetrics();
+				sap.m.MessageToast.show('Metricas atualizadas com sucesso.');
+			} catch (error) {
+				this.showError(error);
+			} finally {
+				this.getView().setBusy(false);
+			}
+
+		},
+
 		onSalvarConfig: async function (oEvent) {
 
 			let v = this.getView();
