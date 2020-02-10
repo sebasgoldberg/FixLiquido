@@ -75,10 +75,13 @@ module.exports = class{
 	
 	async modifyNetPrice(netPrice){
 
+		let sapUUID;
+
 		// Primeiro registramos o history. É mais seguro, já que caso não consigamos
 		// modificar o valor do item, em uma proxima execução será realizada a correção.
 		try{
-			await HistoryAPI.registerFix(
+
+			sapUUID = await HistoryAPI.registerFix(
 				this.data.PurchaseOrder,
 				this.data.PurchaseOrderItem,
 				this.trace.getGUID(),
@@ -87,6 +90,7 @@ module.exports = class{
 				netPrice,
 				this.data.OrderQuantity
 				);
+
 		}catch(e){
 			log.error(`Erro ao tentar registrar o historico de correção para o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;
@@ -100,6 +104,23 @@ module.exports = class{
 				);
 		}catch(e){
 			log.error(`Erro ao tentar corrigir o valor do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
+
+			try {
+
+				await HistoryAPI.delete(sapUUID);
+
+				log.debug(`Historico de correção para o item `+
+					`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
+					`"guid'${sapUUID}'", eliminado com sucesso.`);
+
+			} catch (error) {
+
+				log.error(`Erro ao tentar eliminar o historico de correção para o item `+
+					`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
+					`"guid'${sapUUID}'": ${JSON.stringify(error)}`);
+
+			}
+
 			throw e;
 		}
 

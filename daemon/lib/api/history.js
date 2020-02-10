@@ -75,6 +75,29 @@ let API = class {
 		    }
 		};
 
+		let body = await rp(options);
+
+		return body.d.SAP_UUID;
+	}
+
+	async delete(guid){
+		
+		let csrfTokenData = await this.getCsrfToken()
+		
+		var options = {
+			method: 'DELETE',
+		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_HISTORICOFIXLIQUIDOPO_CDS/YY1_HISTORICOFIXLIQUIDOPO(guid'${guid}')`,
+			auth: {
+				user: config.destination.s4hc.User,
+				pass: config.destination.s4hc.Password,
+			},
+		    json: true,
+		    headers: {
+		    	'x-csrf-token': csrfTokenData.csrfToken,
+		    	'Cookie': csrfTokenData.setCookie,
+		    }
+		};
+
 		await rp(options);
 	}
 
