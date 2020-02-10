@@ -91,6 +91,10 @@ module.exports = class{
 				this.data.OrderQuantity
 				);
 
+			log.debug(`Historico de correção para o item `+
+				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
+				`"guid'${sapUUID}'", criado com sucesso.`);
+
 		}catch(e){
 			log.error(`Erro ao tentar registrar o historico de correção para o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;

@@ -26,14 +26,20 @@ class POFixDaemon extends Daemon{
 		// @todo Promise.all(pendingItems.map(async ...)) em caso de querer executar
 		// em paralelo. Cuidado com processar em paralelo itens de um mesmo pedido.
 		for (let item of pendingItems){
+
 			// Em caso que o daemon seja desativado, finalizamos a execução.
 			if (!this.active)
 				return;
+
+			log.debug(`Iniciando processamento do item ${item.data.PurchaseOrder} ${item.data.PurchaseOrderItem}.`);
+
 			try{
 				await item.fix()
 			}catch(e){
 				log.error(`Erro ao tentar processar o item ${item.data.PurchaseOrder} ${item.data.PurchaseOrderItem}: ${e}`);
 			}
+
+			log.debug(`Finalizando processamento do item ${item.data.PurchaseOrder} ${item.data.PurchaseOrderItem}.`);
 		}
 
 	}
