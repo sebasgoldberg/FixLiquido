@@ -44,5 +44,7 @@ app.listen(iPort, function () {
     log.debug(`App iniciada na porta ${iPort}!`);
 });
 
-let destination = new Destination();
-destination.addThis('daemon_api');
+if (!appEnv.isLocal){
+	let destination = new Destination();
+	destination.addThis('daemon_api');
+}

@@ -34,7 +34,8 @@
 			"description": "Consigue ver a configuração de execução e realizar análise no cálculos de preço liquido.",
 			"scope-references": [
 				"$XSAPPNAME.ConfigRead",
-				"$XSAPPNAME.Analysis"
+				"$XSAPPNAME.Analysis",
+				"$XSAPPNAME.Trace"
 			]
 		},
 		{

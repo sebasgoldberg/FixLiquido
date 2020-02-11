@@ -92,11 +92,13 @@ module.exports = class {
     
         try {
             await this.deleteDestination(destinationName);
+            log.debug(`Destination ${destinationName} eliminada com sucesso.`);
         } catch (e) {
             log.error(`Erro ao tentar eliminar o destination ${destinationName}: ${JSON.stringify(e)}`);
         }
     
         try {
+
             await this.createDestination({
                 Name: destinationName,
                 Type: "HTTP",
@@ -105,6 +107,8 @@ module.exports = class {
                 ProxyType: "Internet",
                 ForwardAuthToken: true,
             });    
+
+            log.debug(`Destination ${destinationName} criada com sucesso.`);
     
         } catch (e) {
             log.error(`Erro ao tentar criar o destination ${destinationName}: ${JSON.stringify(e)}`);
