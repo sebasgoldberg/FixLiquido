@@ -64,6 +64,19 @@ sap.ui.define([
 			});
 		},
 
+		showInfo: function(text) {
+			return new Promise( resolve => {
+				MessageBox.show(
+					text, {
+						icon: MessageBox.Icon.INFO,
+						title: 'Informção',
+						//actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+						onClose: () => resolve()
+					}
+				);
+			});
+		},
+
 		execGetRequest: async function(url, data) {
 			let result;
 			let error;
@@ -194,22 +207,71 @@ sap.ui.define([
 			this.openUrl(`/daemon/analysis/gross/calc/for/guid?GUID=${oViewData.guidSimulacao}`);
 		},
 
+		processAllPromises: function(promises){
+
+			return new Promise( resolve =>{
+
+				if (promises.length == 0){
+					resolve({
+						OK: 0,
+						errors: [],
+					});
+					return;
+				}
+
+				let resolved = 0,
+				pending = promises.length,
+				errors = [];
+
+				promises.forEach(async promise => {
+
+					try {
+						await promise;
+						resolved += 1;
+					} catch (error) {
+						errors.push(error);
+					}
+
+					pending -= 1;
+
+					if (pending <= 0){
+						resolve({
+							OK: resolved,
+							errors: errors,
+						});
+					}
+
+				});;
+
+			});
+		},
+
 		onRegistrarTrace: async function(oEvent) {
-			let oViewData = this.getView().getModel('view').getData();
-			let requestPromises = oViewData.traceData
-				.split('\n')
-				.filter(reg => reg)
-				.map(reg => this.getRequestPromise('/daemon/trace/add', { data: reg }));
-			try {
+
+			try{
+
 				this.getView().setBusy(true);
-				await Promise.all(requestPromises);
-				sap.m.MessageToast.show('Registro de informações de trace enviado.');
-			} catch (error) {
-				console.error(error);
-				this.showError(JSON.stringify(error));
+
+				let oViewData = this.getView().getModel('view').getData();
+				let requestPromises = oViewData.traceData
+					.split('\n')
+					.filter(reg => reg)
+					.map(reg => this.getRequestPromise('/daemon/trace/add', { data: reg }));
+				
+				let precessPromisesResult = await this.processAllPromises(requestPromises);
+	
+				await this.showInfo(`Foram criados ${precessPromisesResult.OK} registros de trace com sucesso, `+
+					`e aconteceram ${precessPromisesResult.errors.length} erros.`);
+
+				if (precessPromisesResult.errors.length > 0){
+					console.error(precessPromisesResult.errors);
+					await this.showError(JSON.stringify(precessPromisesResult.errors));
+				}
+
 			} finally {
 				this.getView().setBusy(false);
 			}
+
 		}
 
 	});
