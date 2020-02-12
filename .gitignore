@@ -42,3 +42,4 @@ APIExternalProducer.js
 
 env
 *.un~
+*.swp
