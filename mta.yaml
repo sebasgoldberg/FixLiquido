@@ -6,30 +6,34 @@ modules:
   - name: daemon
     type: nodejs
     path: daemon
-    provides:
-      - name: daemon_api
-        properties:
-          url: '${default-url}'
+#    provides:
+#      - name: daemon_api
+#        properties:
+#          url: '${default-url}'
     requires:
       - name: dest_FixLiquido
       - name: uaa_FixLiquido
+      - name: logsFixLiquido
   - name: router
     type: nodejs
     path: router
     requires:
       - name: dest_FixLiquido
       - name: uaa_FixLiquido
-      - name: daemon_api
-        group: destinations
-        properties:
-          name: daemon_api
-          url: '~{url}'
-          forwardAuthToken: true
+      - name: logsFixLiquido
+#      - name: daemon_api
+#        group: destinations
+#        properties:
+#          name: daemon_api
+#          url: '~{url}'
+#          forwardAuthToken: true
 
 resources:
   - name: uaa_FixLiquido
     parameters:
       path: ./xs-security.json
+      config:
+        xsappname: "${default-xsappname}"
       service-plan: application
       service: xsuaa
     type: org.cloudfoundry.managed-service
@@ -37,5 +41,9 @@ resources:
     parameters:
       service-plan: lite
       service: destination
-      service-name: dest_FixLiquido
+    type: org.cloudfoundry.managed-service
+  - name: logsFixLiquido
+    parameters:
+      service-plan: lite
+      service: application-logs
     type: org.cloudfoundry.managed-service
