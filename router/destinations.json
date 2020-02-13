@@ -1,0 +1,11 @@
+[
+    {
+        "name":"ui5",
+        "url":"https://sapui5.hana.ondemand.com"
+    },
+    {
+        "name":"daemon_api",
+        "url":"http://localhost:3000",
+        "forwardAuthToken": true
+    }
+]
