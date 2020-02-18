@@ -107,14 +107,14 @@ class POFixDaemon extends Daemon{
 	}
 
 	async _runOneExecution(){
-		log.info('Execução iniciada.');
+		log.debug('Execução iniciada.');
 		try{
 			await this.fixPOs();
 			await this.gerarWorkflowPOs();
 		} catch(e){
 			log.error(`Erro não esperado: ${JSON.stringify(e)}`);
 		}
-		log.info('Execução finalizada.');
+		log.debug('Execução finalizada.');
 	}
 
 }
