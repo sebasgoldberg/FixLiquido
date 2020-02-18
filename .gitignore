@@ -44,3 +44,5 @@ env
 *.un~
 *.swp
 Makefile.mta
+.router.cache
+router.droplet
