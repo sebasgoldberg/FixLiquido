@@ -57,10 +57,6 @@
                     text=""
                     />
                 <Button press="onSalvarConfig" text="Salvar" type="Emphasized"/>
-
-				<Label 
-                    text="" 
-                    />
                 <Button 
                     press="onRecarregarConfig" 
                     text="Recarregar" 

@@ -45,4 +45,5 @@ env
 *.swp
 Makefile.mta
 .router.cache
-router.droplet
+router.droplet.cf-environment
+.cf-environment

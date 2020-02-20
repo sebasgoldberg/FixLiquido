@@ -5,6 +5,24 @@ const TaxService = require('../api/tax');
 const NetCalculation = require('../model/NetCalculation')
 const log = require('../log');
 
+
+
+async function calcForGUID(GUID){
+
+    let trace = new Trace({ GUID: GUID });
+    let payload = await trace.getPayload();
+
+    let quoteResponseBody = await TaxService.quote(payload.getData());
+
+    result = {};
+
+    result.payloadRequest = payload.getData();
+    result.responseBody = quoteResponseBody;
+
+    return result;
+
+}
+
 async function getGrossCalcForGUID(GUID){
 
     let trace = new Trace({ GUID: GUID });
@@ -58,34 +76,51 @@ async function getLastState(filter) {
 
 module.exports = {
 
+    calcForGUID: async (oReq, oRes) => {
+    
+        let GUID = oReq.query.GUID;
+
+        try{
+
+            if (!GUID)
+                throw 'Deve indicar o GUID!!!';
+
+            let result = await calcForGUID(GUID);
+            oRes.send(JSON.stringify(result, null, 4));
+
+        }catch(e){
+
+            oRes.status(500).send(`Aconteceu um erro inesperado!: ${e}`);
+
+        }
+
+    },
+
     grossCalcForGUID: async (oReq, oRes) => {
     
         let GUID = oReq.query.GUID;
 
-        let result;
-
         try{
 
-            if (GUID)
-                result = await getGrossCalcForGUID(GUID);
-            else
-                result = 'Deve indicar o GUID!!!'
+            if (!GUID)
+                throw 'Deve indicar o GUID!!!';
+
+            let result = await getGrossCalcForGUID(GUID);
+            oRes.send(JSON.stringify(result, null, 4));
 
         }catch(e){
 
-            result= e;
+            oRes.status(500).send(`Aconteceu um erro inesperado!: ${e}`);
 
         }
 
-        oRes.send(JSON.stringify(result));
-    
     },
 
     lastState: async (oReq, oRes) => {
     
         try {
             let lastState = await getLastState(oReq.query.filter);
-            oRes.send(JSON.stringify(lastState));
+            oRes.send(JSON.stringify(lastState, null, 4));
         } catch (e) {
             log.error(`Erro na request a rota lastState com o filtro = "${oReq.query.filter}"`);
             oRes.status(500).send(`Aconteceu um erro inesperado!: ${e}`);

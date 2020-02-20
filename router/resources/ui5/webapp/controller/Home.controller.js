@@ -207,6 +207,11 @@ sap.ui.define([
 			this.openUrl(`/daemon/analysis/gross/calc/for/guid?GUID=${oViewData.guidSimulacao}`);
 		},
 
+		onQuoteGuid: function (oEvent) {
+			let oViewData = this.getView().getModel('view').getData();
+			this.openUrl(`/daemon/analysis/quote/for/guid?GUID=${oViewData.guidSimulacao}`);
+		},
+
 		processAllPromises: function(promises){
 
 			return new Promise( resolve =>{

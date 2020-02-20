@@ -66,7 +66,18 @@
 				<Label 
                     text="" 
                     />
-                <Button press="onSimularGuid" text="Simular" type="Emphasized"/>
+                <Button
+					press="onSimularGuid"
+					text="Simular Liquido"
+					tooltip="Simula o calculo utilizando o payload do GUID, mudando o tipo de calculo de Net para Gross."
+					type="Emphasized"
+					/>
+                <Button
+					press="onQuoteGuid"
+					text="Quote"
+					tooltip="Faz o chamado ao serviço de impostos sem realizar nenhuma alteração do payload associado ao GUID."
+					type="Emphasized"
+					/>
 
 			</f:content>
 		</f:SimpleForm>
