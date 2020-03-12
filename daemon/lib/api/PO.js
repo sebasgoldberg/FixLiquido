@@ -31,7 +31,7 @@ let API = class {
 		    uri: `${config.destination.s4hc.URL}${this.POODataPath}/A_PurchaseOrderItem`,
 		    qs: {
 		    	'$format': 'json',
-		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount,YY1_PrecoLiqCorrigido_PDI',
+		    	'$select': 'PurchaseOrder,PurchaseOrderItem,OrderQuantity,NetPriceAmount,NetPriceQuantity,YY1_PrecoLiqCorrigido_PDI',
 		    },
 			auth: {
 				user: config.destination.s4hc.User,
@@ -104,7 +104,7 @@ let API = class {
 		await rp(options);
 	}
 
-	async fixNetPrice(PurchaseOrder, PurchaseOrderItem, NetPriceAmount){
+	async fixNetPrice(PurchaseOrder, PurchaseOrderItem, NetPriceAmount, NetPriceQuantity){
 		let csrfTokenData = await this.getCsrfToken();
 		
 		var options = {
@@ -112,7 +112,8 @@ let API = class {
 		    uri: this.getUrl(PurchaseOrder, PurchaseOrderItem),
 		    body: {
 		    	YY1_PrecoLiqCorrigido_PDI: true,
-		    	NetPriceAmount: NetPriceAmount.toString(),
+				NetPriceAmount: NetPriceAmount.toString(),
+				NetPriceQuantity: NetPriceQuantity.toString()
 		    },
 			auth: {
 				user: config.destination.s4hc.User,

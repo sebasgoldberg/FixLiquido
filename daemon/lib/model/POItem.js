@@ -18,7 +18,8 @@ module.exports = class{
                 "PurchaseOrder": "4500000000",
                 "PurchaseOrderItem": "10",
                 "OrderQuantity": "1.000",
-                "NetPriceAmount": "1000.00"
+				"NetPriceAmount": "1000.00",
+				"NetPriceQuantity": "1"
             } */
 		this.data = data;
 	}
@@ -44,7 +45,9 @@ module.exports = class{
 		// Caso não coincida o valor atual com o valor do liquido calculado
 		// na ultima correção, então o item vai precisar de correção.
 		//return (lastFix.QuantidadeCalculada != this.data.OrderQuantity ||
-		return (lastFix.LiquidoCalculado != this.data.NetPriceAmount);
+		let precoUnitarioAnterior = Number(lastFix.LiquidoCalculado) / Number(lastFix.QuantidadeLiquidoCalculado);
+		let precoUnitarioAtual = this.getUnitPrice();
+		return (precoUnitarioAnterior != precoUnitarioAtual);
 	
 	}
 	
@@ -73,7 +76,7 @@ module.exports = class{
 		return;
 	}
 	
-	async modifyNetPrice(netPrice){
+	async modifyNetPrice(netPrice, netPriceQuantity){
 
 		let sapUUID;
 
@@ -86,8 +89,10 @@ module.exports = class{
 				this.data.PurchaseOrderItem,
 				this.trace.getGUID(),
 				this.data.NetPriceAmount,
+				this.data.NetPriceQuantity,
 				this.data.OrderQuantity,
 				netPrice,
+				netPriceQuantity,
 				this.data.OrderQuantity
 				);
 
@@ -105,6 +110,7 @@ module.exports = class{
 				this.data.PurchaseOrder,
 				this.data.PurchaseOrderItem,
 				netPrice,
+				netPriceQuantity
 				);
 		}catch(e){
 			log.error(`Erro ao tentar corrigir o valor do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
@@ -131,9 +137,10 @@ module.exports = class{
 	}
 	
 	async applyFix(payload){
+		const netPriceQuantity = 10000;
 		let netCalculation = new NetCalculation(payload);
 		let netUnitPrice = (await netCalculation.getNetUnitPrice()).netUnitPrice;
-		await this.modifyNetPrice(netUnitPrice);
+		await this.modifyNetPrice(netUnitPrice*netPriceQuantity, netPriceQuantity);
 	}
 	
 	async fix(){
@@ -163,7 +170,7 @@ module.exports = class{
 
 		// Se o valor do payload, não coincide com o valor do item...
 		if (Number(payload.getQuantity()) != Number(this.data.OrderQuantity) ||
-			Number(payload.getUnitPrice()) != Number(this.data.NetPriceAmount)){
+			Number(payload.getUnitPrice()) != this.getUnitPrice()){
 			// Não fazemos nada, já que ainda a API de trace deveria
 			// ser atualizada.
 			log.warn(`Informações de trace desatualizadas para o PO item `+
@@ -176,5 +183,9 @@ module.exports = class{
 		await this.applyFix(payload);
 		
 		log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} corrigido com sucesso.`);
+	}
+
+	getUnitPrice(){
+		return Number(this.data.NetPriceAmount) / Number(this.data.NetPriceQuantity)
 	}
 }

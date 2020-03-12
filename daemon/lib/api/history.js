@@ -48,7 +48,7 @@ let API = class {
 		};
 	}
 
-	async registerFix(Pedido, Item, TraceGUID, BrutoOrigem, QuantidadeOrigem, LiquidoCalculado, QuantidadeCalculada){
+	async registerFix(Pedido, Item, TraceGUID, BrutoOrigem, QuantidadeBrutoOrigem, QuantidadeOrigem, LiquidoCalculado, QuantidadeLiquidoCalculado, QuantidadeCalculada){
 		
 		let csrfTokenData = await this.getCsrfToken()
 		
@@ -60,8 +60,10 @@ let API = class {
 				Item: Item,
 				TraceGUID: TraceGUID,
 				BrutoOrigem: BrutoOrigem.toString(),
+				QuantidadeBrutoOrigem: QuantidadeBrutoOrigem.toString(),
 				QuantidadeOrigem: QuantidadeOrigem.toString(),
 				LiquidoCalculado: LiquidoCalculado.toString(),
+				QuantidadeLiquidoCalculado: QuantidadeLiquidoCalculado.toString(),
 				QuantidadeCalculada: QuantidadeCalculada.toString()
 		    },
 			auth: {
