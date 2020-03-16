@@ -47,4 +47,8 @@ app.listen(iPort, function () {
 if (!appEnv.isLocal){
 	let destination = new Destination();
 	destination.addThis('daemon_api');
+
+	let POFixDaemonInstance = require('./lib/pofix/instance');
+	POFixDaemonInstance.start();
+	log.debug(`Daemon iniciado de forma automatica.`);
 }
