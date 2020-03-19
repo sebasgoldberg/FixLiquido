@@ -137,7 +137,7 @@ module.exports = class{
 	}
 	
 	async applyFix(payload){
-		const netPriceQuantity = 10000;
+		const netPriceQuantity = 100;
 		let netCalculation = new NetCalculation(payload);
 		let netUnitPrice = (await netCalculation.getNetUnitPrice()).netUnitPrice;
 		await this.modifyNetPrice(netUnitPrice*netPriceQuantity, netPriceQuantity);
