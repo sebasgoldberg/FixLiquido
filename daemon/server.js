@@ -39,7 +39,7 @@ app.use(
 const routes = require('./lib/routes');
 app.use('/', routes);
 
-const iPort = appEnv.port ? appEnv.port : 3000;
+const iPort = appEnv.port ? appEnv.port : 3005;
 app.listen(iPort, function () {
     log.debug(`App iniciada na porta ${iPort}!`);
 });
