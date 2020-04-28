@@ -28,7 +28,7 @@
     "break": "nodemon --inspect-brk server.js"
   },
   "engines": {
-    "node": "12.x"
+    "node": "10.x"
   },
   "version": "1.0.0"
 }
