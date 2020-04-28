@@ -24,13 +24,21 @@ let API = class {
 		};
 	}
 
-	async getLastTrace(DocumentNumber, ItemNumber){
+	_dateToODataQueryString(date){
+		let groups = JSON.stringify(date).match(/"(?<date>.*)"/).groups;
+		return `datetimeoffset'${groups.date}'`;
+	}
+
+	async getLastTrace(DocumentNumber, ItemNumber, fromDateTime){
+
+		let fromDateFilter = fromDateTime ? ` and SAP_CreatedDateTime ge ${this._dateToODataQueryString(fromDateTime)}` : '';
+
 		var options = {
 		    uri: `${config.destination.s4hc.URL}/sap/opu/odata/sap/YY1_TAXSERVICETRACE_CDS/YY1_TAXSERVICETRACE`,
 		    qs: {
 		    	'$format': 'json',
-		    	'$select': 'GUID',
-		    	'$filter': `DocumentNumber eq '${DocumentNumber}' and ItemNumber eq '${ItemNumber}'`,
+				'$select': 'GUID',
+		    	'$filter': `DocumentNumber eq '${DocumentNumber}' and ItemNumber eq '${ItemNumber}'${fromDateFilter}`,
 		    	'$orderby': 'TimeStamp desc',
 		    	'$top': '1',
 		    },

@@ -22,15 +22,20 @@ module.exports = class{
 				"NetPriceQuantity": "1"
             } */
 		this.data = data;
+		this.isLastFixObtained = false;
+		this.lastFix = undefined;
 	}
 	
 	async getLastFix(select){
 		try{
-			return await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem, select);
+			if (!this.isLastFixObtained)
+				this.lastFix = await HistoryAPI.getLastFix(this.data.PurchaseOrder, this.data.PurchaseOrderItem, select);
+			this.isLastFixObtained = true;
 		}catch(e){
 			log.error(`Erro ao tentar obter a ultima correção do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} do histórico.`);
 			throw e;
 		}
+		return this.lastFix;
 	}
 	
 	async needsFix(){
@@ -60,12 +65,19 @@ module.exports = class{
 		}
 	}
 	
+	_dateFromJsonDate(jsonDate){
+		let groups = jsonDate.match(/\/Date\((?<arg>.*)\+.*\)\//).groups;
+		return new Date(Number(groups.arg));
+	}
+
 	async getLastTrace(){
 
 		let traceData;
 
 		try{
-			traceData = await TraceAPI.getLastTrace(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+			let lastFix = await this.getLastFix();
+			let fromLastFixDatetime = lastFix && this._dateFromJsonDate(lastFix.SAP_CreatedDateTime)
+			traceData = await TraceAPI.getLastTrace(this.data.PurchaseOrder, this.data.PurchaseOrderItem, fromLastFixDatetime);
 		}catch(e){
 			log.error(`Erro ao tentar obter o ultimo trace do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;
