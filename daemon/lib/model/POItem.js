@@ -180,9 +180,7 @@ module.exports = class{
 
 		let payload = await this.trace.getPayload();
 
-		// Se o valor do payload, não coincide com o valor do item...
-		if (Number(payload.getQuantity()) != Number(this.data.OrderQuantity) ||
-			Number(payload.getUnitPrice()) != this.getUnitPrice()){
+		if (!this.payloadAtualizado(payload)){
 			// Não fazemos nada, já que ainda a API de trace deveria
 			// ser atualizada.
 			log.warn(`Informações de trace desatualizadas para o PO item `+
@@ -195,6 +193,16 @@ module.exports = class{
 		await this.applyFix(payload);
 		
 		log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} corrigido com sucesso.`);
+	}
+
+	payloadAtualizado(payload){
+
+		// Verifica se o valor do payload coincide com o valor do item...
+		return (
+			( Number(payload.getQuantity()) == Number(this.data.OrderQuantity) ) &&
+			( ( Math.abs( Number(payload.getUnitPrice()) - this.getUnitPrice() ) ) < 0.01 )
+		);
+
 	}
 
 	getUnitPrice(){
