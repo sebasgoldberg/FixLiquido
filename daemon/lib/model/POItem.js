@@ -39,7 +39,7 @@ module.exports = class{
 	}
 	
 	async needsFix(){
-		
+
 		let lastFix = await this.getLastFix('LiquidoCalculado');
 		
 		// Em caso de não ter registro de correção, significa que precisa 
@@ -56,13 +56,29 @@ module.exports = class{
 	
 	}
 	
+	async fixApplies(payload){
+
+		// Em caso de ter que aplicar a correção em serviços e o item não ser um serviço...
+		return (config.params.applyFixForServices || (!payload.isService()));
+	}
+	
 	async setAsFixed(){
+
+		let sapUUID = await this.registerFix(this.data.NetPriceAmount, this.data.NetPriceQuantity);
+
 		try{
+
 			await POAPI.setItemAsFixed(this.data.PurchaseOrder, this.data.PurchaseOrderItem);
+
 		}catch(e){
+
 			log.error(`Erro ao tentar marcar o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} como corrigido.`);
+
+			await this.deleteHistory(sapUUID);
+
 			throw e;
 		}
+
 	}
 	
 	_dateFromJsonDate(jsonDate){
@@ -87,35 +103,61 @@ module.exports = class{
 			return new Trace(traceData);
 		return;
 	}
-	
-	async modifyNetPrice(netPrice, netPriceQuantity){
 
-		let sapUUID;
+	async registerFix(newNetPrice, newNetPriceQuantity){
+
+		let traceGUID = ( this.trace && this.trace.getGUID() ) || '';
 
 		// Primeiro registramos o history. É mais seguro, já que caso não consigamos
 		// modificar o valor do item, em uma proxima execução será realizada a correção.
 		try{
 
-			sapUUID = await HistoryAPI.registerFix(
+			let sapUUID = await HistoryAPI.registerFix(
 				this.data.PurchaseOrder,
 				this.data.PurchaseOrderItem,
-				this.trace.getGUID(),
+				traceGUID,
 				this.data.NetPriceAmount,
 				this.data.NetPriceQuantity,
 				this.data.OrderQuantity,
-				netPrice,
-				netPriceQuantity,
+				newNetPrice,
+				newNetPriceQuantity,
 				this.data.OrderQuantity
 				);
 
 			log.debug(`Historico de correção para o item `+
 				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
 				`"guid'${sapUUID}'", criado com sucesso.`);
+			
+			return sapUUID;
 
 		}catch(e){
 			log.error(`Erro ao tentar registrar o historico de correção para o item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 			throw e;
 		}
+
+	}
+
+	async deleteHistory(sapUUID){
+		try {
+
+			await HistoryAPI.delete(sapUUID);
+
+			log.debug(`Historico de correção para o item `+
+				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
+				`"guid'${sapUUID}'", eliminado com sucesso.`);
+
+		} catch (error) {
+
+			log.error(`Erro ao tentar eliminar o historico de correção para o item `+
+				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
+				`"guid'${sapUUID}'": ${JSON.stringify(error)}`);
+
+		}
+	}
+	
+	async modifyNetPrice(netPrice, netPriceQuantity){
+
+		let sapUUID = await this.registerFix(netPrice, netPriceQuantity);
 
 		try{
 			await POAPI.fixNetPrice(
@@ -125,23 +167,10 @@ module.exports = class{
 				netPriceQuantity
 				);
 		}catch(e){
+
 			log.error(`Erro ao tentar corrigir o valor do item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}.`);
 
-			try {
-
-				await HistoryAPI.delete(sapUUID);
-
-				log.debug(`Historico de correção para o item `+
-					`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
-					`"guid'${sapUUID}'", eliminado com sucesso.`);
-
-			} catch (error) {
-
-				log.error(`Erro ao tentar eliminar o historico de correção para o item `+
-					`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} com o SAP_UUID `+
-					`"guid'${sapUUID}'": ${JSON.stringify(error)}`);
-
-			}
+			await this.deleteHistory(sapUUID);
 
 			throw e;
 		}
@@ -165,9 +194,9 @@ module.exports = class{
 				`não precisava de correção. Foi marcado como corrigido.`);
 			return;
 		}
-		
+
 		this.trace = await this.getLastTrace();
-		
+
 		// En caso de não obter nenhum trace.
 		if (!this.trace){
 			// Não fazemos nada, já que ainda a API de trace deveria
@@ -187,6 +216,15 @@ module.exports = class{
 				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}. `+
 				`Não sera aplicada correção por enquanto.`);
 
+			return;
+		}
+
+		// Em caso de não aplicar a correção...
+		if (!(await this.fixApplies(payload))){
+			// Atualizamos o item como corrigido.
+			await this.setAsFixed()
+			log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} `+
+				`desconsiderado, já que não aplica a correção. Foi marcado como corrigido.`);
 			return;
 		}
 

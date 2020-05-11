@@ -59,7 +59,8 @@ async function getLastState(filter) {
 
             itemAnalysis.lastFix = await item.getLastFix();
             
-            itemAnalysis.trace = await getGrossCalcForGUID(itemAnalysis.lastFix.TraceGUID);
+            if (itemAnalysis.lastFix.TraceGUID)
+                itemAnalysis.trace = await getGrossCalcForGUID(itemAnalysis.lastFix.TraceGUID);
 
         }catch(e){
 

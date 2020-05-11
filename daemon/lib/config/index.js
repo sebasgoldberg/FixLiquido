@@ -11,6 +11,7 @@ class Config{
 		this.params = {
 			itemsAdditionalFilters: '',
 			POAdditionalFilters: '',
+			applyFixForServices: false,
 		};
 	}
 	
