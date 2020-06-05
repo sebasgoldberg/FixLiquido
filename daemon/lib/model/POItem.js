@@ -56,7 +56,7 @@ module.exports = class{
 	
 	}
 	
-	async fixApplies(payload){
+	fixApplies(payload){
 
 		// Em caso de ter que aplicar a correção em serviços e o item não ser um serviço...
 		return (config.params.applyFixForServices || (!payload.isService()));
@@ -209,6 +209,15 @@ module.exports = class{
 
 		let payload = await this.trace.getPayload();
 
+		// Em caso de não aplicar a correção...
+		if (!(this.fixApplies(payload))){
+			// Atualizamos o item como corrigido.
+			await this.setAsFixed()
+			log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} `+
+				`desconsiderado, já que não aplica a correção. Foi marcado como corrigido.`);
+			return;
+		}
+		
 		if (!this.payloadAtualizado(payload)){
 			// Não fazemos nada, já que ainda a API de trace deveria
 			// ser atualizada.
@@ -216,15 +225,6 @@ module.exports = class{
 				`${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem}. `+
 				`Não sera aplicada correção por enquanto.`);
 
-			return;
-		}
-
-		// Em caso de não aplicar a correção...
-		if (!(await this.fixApplies(payload))){
-			// Atualizamos o item como corrigido.
-			await this.setAsFixed()
-			log.info(`PO item ${this.data.PurchaseOrder} ${this.data.PurchaseOrderItem} `+
-				`desconsiderado, já que não aplica a correção. Foi marcado como corrigido.`);
 			return;
 		}
 
